@@ -1,9 +1,9 @@
-package modemenu;
+package de.kit.legomindstorm.gruppe05.modemenu;
 
 import java.util.ArrayList;
 
-import execution.Mode;
-import execution.State;
+import de.kit.legomindstorm.gruppe05.execution.Mode;
+import de.kit.legomindstorm.gruppe05.execution.State;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 

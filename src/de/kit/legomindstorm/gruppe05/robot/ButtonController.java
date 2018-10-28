@@ -1,4 +1,4 @@
-package robot;
+package de.kit.legomindstorm.gruppe05.robot;
 
 import lejos.hardware.Key;
 import lejos.hardware.Sound;

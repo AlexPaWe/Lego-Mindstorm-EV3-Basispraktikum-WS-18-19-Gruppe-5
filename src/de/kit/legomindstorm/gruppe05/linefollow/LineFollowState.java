@@ -1,6 +1,6 @@
-package linefollow;
+package de.kit.legomindstorm.gruppe05.linefollow;
 
-import execution.State;
+import de.kit.legomindstorm.gruppe05.execution.State;
 import lejos.hardware.lcd.LCD;
 
 public class LineFollowState extends State {

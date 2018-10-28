@@ -1,7 +1,7 @@
-package execution;
+package de.kit.legomindstorm.gruppe05.execution;
 
-import linefollow.LineFollowState;
-import modemenu.ModeMenuState;
+import de.kit.legomindstorm.gruppe05.linefollow.LineFollowState;
+import de.kit.legomindstorm.gruppe05.modemenu.ModeMenuState;
 
 /**
  * Represents an operation mode.
