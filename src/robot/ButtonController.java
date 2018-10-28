@@ -35,8 +35,7 @@ public class ButtonController {
 	 * Changes the LED pattern. Patterns are provided in class enum "LEDPattern".
 	 * @param pattern
 	 */
-	public void changeLEDPattern(LEDPattern pattern)
-	{
+	public void changeLEDPattern(LEDPattern pattern) {
 		lejos.hardware.Button.LEDPattern(pattern.ordinal());
 	}
 	

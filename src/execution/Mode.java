@@ -31,7 +31,7 @@ public enum Mode {
 	 * @return
 	 */
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	
 	/**
@@ -40,6 +40,6 @@ public enum Mode {
 	 * @return
 	 */
 	public State getStartState() {
-		return startState;
+		return this.startState;
 	}
 }

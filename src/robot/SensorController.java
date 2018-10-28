@@ -56,13 +56,11 @@ public class SensorController {
 		updateTouch();
 	}
 	
-	private void updateColorId()
-	{
+	private void updateColorId() {
 		colorId = colorSensor.getColorID();
 	}
 	
-	private void updateDistance()
-	{
+	private void updateDistance() {
 		SensorMode distanceSampler = distanceSensor.getMode("Distance");
         float[] sample = new float[distanceSampler.sampleSize()];
         distanceSampler.fetchSample(sample, 0);

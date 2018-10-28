@@ -18,10 +18,8 @@ public class ModeMenuState extends State {
     	menuEntries = new ArrayList<Mode>();
     	
     	// we want to display all modes, except the mode menu itself
-    	for (Mode mode : Mode.values())
-    	{
-    		if (mode != Mode.ModeMenu)
-    		{
+    	for (Mode mode : Mode.values()) {
+    		if (mode != Mode.ModeMenu) {
     			menuEntries.add(mode);
     		}
     	}

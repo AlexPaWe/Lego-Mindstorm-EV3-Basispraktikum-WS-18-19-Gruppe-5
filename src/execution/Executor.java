@@ -27,8 +27,7 @@ public class Executor {
 		return instance;
 	}
 	
-	private Executor()
-	{
+	private Executor() {
 		mode = null;
 		state = null;
 		changeMode(START_MODE);
@@ -36,15 +35,12 @@ public class Executor {
 	}
 
 	private void mainloop() {
-		while(true)
-		{
-			if (ButtonController.get().isKeyPressedAndReleased(Button.ESCAPE))
-			{
+		while(true) {
+			if (ButtonController.get().isKeyPressedAndReleased(Button.ESCAPE)) {
 	            changeMode(Mode.ModeMenu);
 			}
 			
-			if (mode != Mode.ModeMenu)
-			{
+			if (mode != Mode.ModeMenu) {
 				SensorController.get().tick();
 			}
 			
@@ -58,10 +54,9 @@ public class Executor {
 	 * Used when starting the robot or transitioning from one mode to another.
 	 * @param newMode
 	 */
-	public void changeMode(Mode newMode)
-	{
+	public void changeMode(Mode newMode) {
 		mode = newMode;
-		changeState_Implementation(mode.getStartState(), true);
+		changeStateImplementation(mode.getStartState(), true);
 	}
 	
 	/**
@@ -70,20 +65,16 @@ public class Executor {
 	 * CANNOT BE USED TO TRANSITION FROM ONE MODE TO ANOTHER!
 	 * @param newState
 	 */
-	public void changeState(State newState)
-	{
-		if (state.getClass().getPackage() != newState.getClass().getPackage())
-		{
+	public void changeState(State newState) {
+		if (state.getClass().getPackage() != newState.getClass().getPackage()) {
 			throw new RuntimeException("Must not transition between modes with changeState.");
 		}
 		
-		changeState_Implementation(newState, false);
+		changeStateImplementation(newState, false);
 	}
 
-	private void changeState_Implementation(State newState, boolean changeMode)
-	{
-		if (state != null)
-		{
+	private void changeStateImplementation(State newState, boolean changeMode) {
+		if (state != null) {
 			state.onEnd(changeMode);
 		}
 		

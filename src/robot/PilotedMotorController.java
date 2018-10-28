@@ -79,6 +79,6 @@ public class PilotedMotorController {
 		if (angle < 0 || angle > 180) {
 			throw new IllegalArgumentException();
 		}
-		this.rotate(-angle);
+		this.rotate(- angle);
 	}
 }
