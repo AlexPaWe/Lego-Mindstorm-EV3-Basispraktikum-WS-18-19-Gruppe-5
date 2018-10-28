@@ -2,3 +2,6 @@
 /.classpath
 /.project
 /.settings/org.eclipse.jdt.core.prefs
+
+## Used by Alexander as a Class Diagram ##
+*.ucls
