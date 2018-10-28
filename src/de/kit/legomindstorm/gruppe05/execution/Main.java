@@ -1,4 +1,4 @@
-package execution;
+package de.kit.legomindstorm.gruppe05.execution;
 
 public class Main {
 

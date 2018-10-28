@@ -1,9 +1,9 @@
-package execution;
+package de.kit.legomindstorm.gruppe05.execution;
 
-import robot.ButtonController;
-import robot.MotorController;
-import robot.PilotedMotorController;
-import robot.SensorController;
+import de.kit.legomindstorm.gruppe05.robot.ButtonController;
+import de.kit.legomindstorm.gruppe05.robot.MotorController;
+import de.kit.legomindstorm.gruppe05.robot.PilotedMotorController;
+import de.kit.legomindstorm.gruppe05.robot.SensorController;
 
 /**
  * Encapsulates behaviour of the state.

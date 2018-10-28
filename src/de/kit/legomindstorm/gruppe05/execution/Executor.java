@@ -1,8 +1,8 @@
-package execution;
+package de.kit.legomindstorm.gruppe05.execution;
 
+import de.kit.legomindstorm.gruppe05.robot.ButtonController;
+import de.kit.legomindstorm.gruppe05.robot.SensorController;
 import lejos.hardware.Button;
-import robot.ButtonController;
-import robot.SensorController;
 
 /**
  * Executes the main loop, which updates the sensor values and runs logic depending on its state.
