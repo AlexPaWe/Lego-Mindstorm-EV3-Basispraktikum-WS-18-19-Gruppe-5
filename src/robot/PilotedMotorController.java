@@ -22,7 +22,7 @@ public class PilotedMotorController {
 
 	private PilotedMotorController() {
 		pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
-		pilot.setLinearAcceleration(60);
+		pilot.setAcceleration(60);
 	}
 
 	/**
@@ -37,7 +37,7 @@ public class PilotedMotorController {
 	}
 
 	public void setSpeed(double speed) {
-		this.pilot.setLinearSpeed(speed);
+		this.pilot.setTravelSpeed(speed);
 	}
 
 	public void goForward() {
