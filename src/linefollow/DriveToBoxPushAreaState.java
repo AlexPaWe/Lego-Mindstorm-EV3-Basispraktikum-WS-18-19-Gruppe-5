@@ -1,5 +1,6 @@
 package linefollow;
 
+import execution.Executor;
 import execution.Mode;
 import execution.State;
 import lejos.hardware.Sound;
@@ -36,14 +37,14 @@ public class DriveToBoxPushAreaState extends State {
 	}
 
 	@Override
-	public void tick() {
+	public void mainloop() {
 		// TODO
 		// example stuff:
 		
 		motors.forward();
 		
 		if (sensors.getColorId() == lejos.robotics.Color.BLUE) {
-			executor.changeMode(Mode.BoxPush);
+			Executor.get().changeMode(Mode.BoxPush);
 		}
 	}
 

@@ -1,6 +1,8 @@
 package execution;
 
 import lejos.hardware.Button;
+import linefollow.LineFollowState;
+import modemenu.ModeMenuState;
 import robot.ButtonController;
 import robot.SensorController;
 
@@ -32,24 +34,20 @@ public class Executor {
 		mode = null;
 		state = null;
 		changeMode(START_MODE);
-		mainloop();
 	}
 
-	private void mainloop() {
-		while(true)
+	public void mainloop() {
+		if (ButtonController.get().isKeyPressedAndReleased(Button.ESCAPE))
 		{
-			if (ButtonController.get().isKeyPressedAndReleased(Button.ESCAPE))
-			{
-	            changeMode(Mode.ModeMenu);
-			}
-			
-			if (mode != Mode.ModeMenu)
-			{
-				SensorController.get().tick();
-			}
-			
-			state.tick();
+            changeMode(Mode.ModeMenu);
 		}
+		
+		if (mode != Mode.ModeMenu)
+		{
+			SensorController.get().tick();
+		}
+		
+		state.mainloop();
 	}
 	
 	/**
@@ -61,7 +59,28 @@ public class Executor {
 	public void changeMode(Mode newMode)
 	{
 		mode = newMode;
-		changeState_Implementation(mode.getStartState(), true);
+		State startState = null;
+		switch(newMode)
+		{
+		case BoxPush:
+			// TODO
+			break;
+		case Bridge:
+			// TODO
+			break;
+		case ColorSearch:
+			// TODO
+			break;
+		case LineFollow:
+			startState = LineFollowState.get();
+			break;
+		case ModeMenu:
+			startState = ModeMenuState.get();
+			break;
+		default:
+			break;
+		}
+		changeState_Implementation(startState, true);
 	}
 	
 	/**

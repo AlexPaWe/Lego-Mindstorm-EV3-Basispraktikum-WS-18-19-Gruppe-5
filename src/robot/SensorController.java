@@ -15,9 +15,10 @@ import lejos.hardware.sensor.SensorMode;
 public class SensorController {
 	private static SensorController instance;
 	
-	private final Port COLOR_SENSOR_PORT = SensorPort.S4;
-	private final Port DISTANCE_SENSOR_PORT = SensorPort.S1;
-	private final Port TOUCH_SENSOR_PORT = SensorPort.S3;
+	private final Port COLOR_SENSOR_PORT = SensorPort.S1;
+	private final Port DISTANCE_SENSOR_PORT = SensorPort.S4;
+	private final Port LEFT_TOUCH_SENSOR_PORT = SensorPort.S3;
+	private final Port RIGHT_TOUCH_SENSOR_PORT = SensorPort.S2;
 	
 	private int colorId;
 	private float distance;
@@ -25,14 +26,14 @@ public class SensorController {
 	
 	private EV3ColorSensor colorSensor;
 	private EV3UltrasonicSensor distanceSensor;
-	private EV3TouchSensor touchSensor;
+	private EV3TouchSensor leftTouchSensor;
 
 	private SensorController() {
 		colorId = 0;
 		distance = 0;
 		colorSensor = new EV3ColorSensor(COLOR_SENSOR_PORT);
 		distanceSensor = new EV3UltrasonicSensor(DISTANCE_SENSOR_PORT);
-		touchSensor = new EV3TouchSensor(TOUCH_SENSOR_PORT);
+		leftTouchSensor = new EV3TouchSensor(LEFT_TOUCH_SENSOR_PORT);
 	}
 
 	/**
@@ -70,11 +71,12 @@ public class SensorController {
 	}
 	
 	private void updateTouch() {
-        float[] sample = new float[touchSensor.sampleSize()];
+        float[] sample = new float[leftTouchSensor.sampleSize()];
         sample[0] = 0;
-        touchSensor.fetchSample(sample, 0);
+        leftTouchSensor.fetchSample(sample, 0);
         if(sample[0] == 1) {
-            Sound.playTone(800, 20);
+        	// TODO
+            //Sound.playTone(800, 20);
         }
         touching = (sample[0] == 1);
     }

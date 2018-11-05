@@ -15,7 +15,6 @@ public abstract class State {
 	protected static PilotedMotorController pmotors = PilotedMotorController.get();
 	protected static SensorController sensors = SensorController.get();
 	protected static ButtonController buttons = ButtonController.get();
-	protected static Executor executor = Executor.get();
 	
 	/**
 	 * Executed, when the state is entered.
@@ -32,7 +31,7 @@ public abstract class State {
 	/**
 	 * Method that is called each time in the main loop of the executor.
 	 */
-	public abstract void tick();
+	public abstract void mainloop();
 	
 	/**
 	 * Get the singleton instance.

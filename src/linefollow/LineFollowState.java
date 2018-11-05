@@ -1,5 +1,6 @@
 package linefollow;
 
+import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
 
@@ -33,17 +34,19 @@ public class LineFollowState extends State {
 	}
 	
 	@Override
-	public void tick() {
+	public void mainloop() {
 		// TODO
 		// example stuff:
 		
+		/*
 		if (sensors.getDistance() < 100) {
-			executor.changeState(AvoidObstacleState.get());
+			Executor.get().changeState(AvoidObstacleState.get());
 		}
 		
 		if (sensors.getColorId() == lejos.robotics.Color.RED) {
-			executor.changeState(DriveToBoxPushAreaState.get());
+			Executor.get().changeState(DriveToBoxPushAreaState.get());
 		}
+		*/
 		
 		motors.forward();
 	}

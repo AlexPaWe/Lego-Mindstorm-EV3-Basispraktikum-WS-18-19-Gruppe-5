@@ -7,8 +7,11 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// First call of the Executor to start it.
 		Executor.get();
+		while(true)
+		{
+			Executor.get().mainloop();
+		}
 	}
 
 }

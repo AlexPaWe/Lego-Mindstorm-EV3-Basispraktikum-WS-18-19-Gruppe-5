@@ -9,12 +9,11 @@ import lejos.robotics.navigation.DifferentialPilot;
  *
  */
 
-@SuppressWarnings("deprecation")
 public class PilotedMotorController {
 	private static PilotedMotorController instance;
 	
-	private final NXTRegulatedMotor LEFT_MOTOR = Motor.A;
-	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.B;
+	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
+	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
 	private final float WHEEL_DIAMETER = 6.88f;
 	private final float TRACK_WIDTH = 12.0f;
 	
@@ -22,7 +21,7 @@ public class PilotedMotorController {
 
 	private PilotedMotorController() {
 		pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
-		pilot.setLinearAcceleration(60);
+		pilot.setAcceleration(60);
 	}
 
 	/**
@@ -37,7 +36,7 @@ public class PilotedMotorController {
 	}
 
 	public void setSpeed(double speed) {
-		this.pilot.setLinearSpeed(speed);
+		this.pilot.setTravelSpeed(speed);
 	}
 
 	public void goForward() {

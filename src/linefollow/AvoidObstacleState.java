@@ -1,5 +1,6 @@
 package linefollow;
 
+import execution.Executor;
 import execution.State;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
@@ -36,13 +37,13 @@ public class AvoidObstacleState extends State {
 	}
 
 	@Override
-	public void tick() {
+	public void mainloop() {
 		// TODO
 		// example stuff:
 		
 		motors.forward();
 		
-		executor.changeState(LineFollowState.get());
+		Executor.get().changeState(LineFollowState.get());
 	}
 
 }

@@ -2,6 +2,7 @@ package modemenu;
 
 import java.util.ArrayList;
 
+import execution.Executor;
 import execution.Mode;
 import execution.State;
 import lejos.hardware.Button;
@@ -36,6 +37,7 @@ public class ModeMenuState extends State {
 
 	@Override
 	public void onBegin(boolean modeChanged) {
+		motors.stop();
 		redraw();
 	}
 
@@ -45,7 +47,7 @@ public class ModeMenuState extends State {
 	}
 
 	@Override
-	public void tick() {
+	public void mainloop() {
 		if (buttons.isKeyPressedAndReleased(Button.UP)) {
             selectedState = (selectedState - 1 + menuEntries.size()) % menuEntries.size();
             redraw();
@@ -53,7 +55,7 @@ public class ModeMenuState extends State {
             selectedState = (selectedState + 1) % menuEntries.size();
             redraw();
         } else if (buttons.isKeyPressedAndReleased(Button.ENTER)) {
-            executor.changeMode(menuEntries.get(selectedState));
+            Executor.get().changeMode(menuEntries.get(selectedState));
         } else if (buttons.isKeyPressedAndReleased(Button.ESCAPE)) {
             System.exit(0);
         }
