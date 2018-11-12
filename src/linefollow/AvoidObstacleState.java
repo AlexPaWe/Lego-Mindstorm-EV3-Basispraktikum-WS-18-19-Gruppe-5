@@ -4,6 +4,7 @@ import execution.Executor;
 import execution.State;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import robot.MotorController.Direction;
 
 public class AvoidObstacleState extends State {
 	
@@ -21,13 +22,10 @@ public class AvoidObstacleState extends State {
 
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
-				
-		
 		LCD.clear();
-        LCD.drawString("Avoid obstacle", 0, 0);
+        LCD.drawString("Line: Avoid obstacle", 0, 0);
         Sound.playTone(500, 500);
+        motors.setMotorDirections(Direction.Stop, Direction.Stop);
 	}
 
 	@Override
@@ -41,9 +39,9 @@ public class AvoidObstacleState extends State {
 		// TODO
 		// example stuff:
 		
-		motors.forward();
+		//motors.forward();
 		
-		Executor.get().changeState(LineFollowState.get());
+		//Executor.get().changeState(LineFollowState.get());
 	}
 
 }

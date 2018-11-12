@@ -2,6 +2,7 @@ package execution;
 
 import boxpush.BoxPushState;
 import bridge.BridgeState;
+import colorsearch.ColorSearchState;
 import lejos.hardware.Button;
 import linefollow.LineFollowState;
 import modemenu.ModeMenuState;
@@ -16,6 +17,7 @@ public class Executor {
 	private static final Mode START_MODE = Mode.ModeMenu;
 	
 	private Mode mode;
+	private State requestedState;
 	private State state;
 	
 	private static Executor instance;
@@ -49,6 +51,12 @@ public class Executor {
 			SensorController.get().tick();
 		}
 		
+		if (requestedState != null)
+		{
+			changeState(requestedState);
+			requestedState = null;
+		}
+		
 		state.mainloop();
 	}
 	
@@ -71,7 +79,7 @@ public class Executor {
 			startState = BridgeState.get();
 			break;
 		case ColorSearch:
-			// TODO
+			startState = ColorSearchState.get();
 			break;
 		case LineFollow:
 			startState = LineFollowState.get();
@@ -85,13 +93,12 @@ public class Executor {
 		changeState_Implementation(startState, true);
 	}
 	
-	/**
-	 * Changes the state of the program.
-	 * Used to switch states within a mode.
-	 * CANNOT BE USED TO TRANSITION FROM ONE MODE TO ANOTHER!
-	 * @param newState
-	 */
-	public void changeState(State newState)
+	public void requestChangeState(State newState)
+	{
+		requestedState = newState;
+	}
+	
+	private void changeState(State newState)
 	{
 		if (state.getClass().getPackage() != newState.getClass().getPackage())
 		{

@@ -7,6 +7,7 @@ import execution.Mode;
 import execution.State;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
+import robot.MotorController;
 
 public class ModeMenuState extends State {
     private static ModeMenuState instance = null;
@@ -38,7 +39,18 @@ public class ModeMenuState extends State {
 	@Override
 	public void onBegin(boolean modeChanged) {
 		motors.stop();
-		motors.pivotDistanceSensorLeft();
+		switch(MotorController.get().START_PIVOT)
+		{
+		case Left:
+			motors.pivotDistanceSensorLeft();
+			break;
+		case Right:
+			motors.pivotDistanceSensorRight();
+			break;
+		case Down:
+			motors.pivotDistanceSensorDown();
+			break;
+		}
 		redraw();
 	}
 

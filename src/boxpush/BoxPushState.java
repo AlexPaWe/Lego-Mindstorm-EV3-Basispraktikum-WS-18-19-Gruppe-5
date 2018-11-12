@@ -23,7 +23,7 @@ public class BoxPushState extends State {
 		// example stuff:
 		
 		LCD.clear();
-	    LCD.drawString("Line Follow", 0, 0);
+	    LCD.drawString("Box push", 0, 0);
 	}
 
 	@Override

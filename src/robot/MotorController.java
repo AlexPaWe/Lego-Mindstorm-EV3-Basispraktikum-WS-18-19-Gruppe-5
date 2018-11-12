@@ -13,17 +13,18 @@ import lejos.utility.Delay;
 public class MotorController {
 	private static MotorController instance;
 	
-	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
-	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
+	public final NXTRegulatedMotor LEFT_MOTOR = Motor.B; // TODO make private
+	public final NXTRegulatedMotor RIGHT_MOTOR = Motor.A; // TODO make private
 	private final NXTRegulatedMotor SMALL_MOTOR = Motor.C;
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
+	public final Pivot START_PIVOT = Pivot.Down;
 	
-	private enum Pivot {Right,Left,Down};
+	public enum Pivot {Right,Left,Down};
 	private Pivot distanceSensorPivot;
 	
 	private MotorController() {
-		distanceSensorPivot = Pivot.Left;
+		distanceSensorPivot = START_PIVOT;
 	}
 
 	/**

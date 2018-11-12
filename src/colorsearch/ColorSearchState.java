@@ -1,18 +1,18 @@
-package bridge;
+package colorsearch;
 
 import execution.State;
 import lejos.hardware.lcd.LCD;
 
-public class BridgeState extends State {
+public class ColorSearchState extends State {
 	
-	private static BridgeState instance;
+	private static ColorSearchState instance;
 
-	private BridgeState() {
+	private ColorSearchState() {
 	}
 
 	public static State get() {
 		if (instance == null) {
-			instance = new BridgeState();
+			instance = new ColorSearchState();
 		}
 		return instance;
 	}
@@ -23,7 +23,7 @@ public class BridgeState extends State {
 		// example stuff:
 		
 		LCD.clear();
-	    LCD.drawString("Bridge", 0, 0);
+	    LCD.drawString("Color search", 0, 0);
 	}
 
 	@Override
