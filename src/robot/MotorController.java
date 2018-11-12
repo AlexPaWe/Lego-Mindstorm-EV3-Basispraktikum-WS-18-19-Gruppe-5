@@ -15,6 +15,7 @@ public class MotorController {
 	
 	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
 	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
+	private final NXTRegulatedMotor SMALL_MOTOR = Motor.C;
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
 	
@@ -111,9 +112,9 @@ public class MotorController {
 		Delay.msDelay((long) time);
 	}
 	
-	private enum Direction {Stop, Forward, Backward};
+	public enum Direction {Stop, Forward, Backward};
 	
-	private void setMotorDirections(Direction leftDir, Direction rightDir) {
+	public void setMotorDirections(Direction leftDir, Direction rightDir) {
 		//LEFT_MOTOR.startSynchronization();
 		//RIGHT_MOTOR.startSynchronization();
 
@@ -153,7 +154,7 @@ public class MotorController {
 	 * @param leftTargetSpeed
 	 * @param rightTargetSpeed
 	 */
-	public void changeMotorSpeeds(float leftTargetSpeed, float rightTargetSpeed) {
+	public void setMotorSpeeds(float leftTargetSpeed, float rightTargetSpeed) {
 
 		/* print the target speed of left and right motors on the brick's screen */
 		LCD.drawString("L= " + leftTargetSpeed, 0, 0);
@@ -181,4 +182,63 @@ public class MotorController {
 		//RIGHT_MOTOR.endSynchronization();
 	}
 
+	/**
+	 * Negative values dont work here.
+	 * @param speed
+	 */
+	public void setLeftMotorSpeed(float speed)
+	{
+		LEFT_MOTOR.setSpeed(speed);
+	}
+	
+	/**
+	 * Negative values dont work here.
+	 * @param speed
+	 */
+	public void setRightMotorSpeed(float speed)
+	{
+		RIGHT_MOTOR.setSpeed(speed);
+	}
+	
+	public void setRightMotorDirection(Direction dir)
+	{
+		switch(dir)
+		{
+		case Stop:
+			RIGHT_MOTOR.stop(true);
+			break;
+		case Forward:
+			RIGHT_MOTOR.forward();
+			break;
+		case Backward:
+			RIGHT_MOTOR.backward();
+			break;
+		}
+	}
+	
+	public void setLeftMotorDirection(Direction dir)
+	{
+		switch(dir)
+		{
+		case Stop:
+			LEFT_MOTOR.stop(true);
+			break;
+		case Forward:
+			LEFT_MOTOR.forward();
+			break;
+		case Backward:
+			LEFT_MOTOR.backward();
+			break;
+		}
+	}
+	
+	public void pivotDistanceSensorDown()
+	{
+		
+	}
+	
+	public void pivotDistanceSensorUp()
+	{
+		
+	}
 }

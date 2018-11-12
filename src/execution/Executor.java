@@ -42,10 +42,10 @@ public class Executor {
             changeMode(Mode.ModeMenu);
 		}
 		
-		if (mode != Mode.ModeMenu)
-		{
-			SensorController.get().tick();
-		}
+		//if (mode != Mode.ModeMenu)
+		//{
+		//	SensorController.get().tick();
+		//}
 		
 		state.mainloop();
 	}

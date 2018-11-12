@@ -1,5 +1,7 @@
 package execution;
 
+import linefollow.LineFollowState;
+
 public class Main {
 
 	/**
@@ -7,10 +9,13 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Executor.get();
+		//Executor.get();
+		State state = LineFollowState.get();
 		while(true)
 		{
-			Executor.get().mainloop();
+			state.mainloop();
+			//Executor.get().mainloop();
+			
 		}
 	}
 
