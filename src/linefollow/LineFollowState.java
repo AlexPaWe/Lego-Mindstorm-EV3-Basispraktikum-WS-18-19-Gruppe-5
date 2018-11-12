@@ -80,6 +80,9 @@ public class LineFollowState extends State {
 			if (motors.LEFT_MOTOR.getTachoCount() < -400)
 			{
 				navigateOverGap();
+				FindWhiteState state = (FindWhiteState)FindWhiteState.get();
+				state.leftSpeed = 220;
+				state.rightSpeed = 220;
 				Executor.get().requestChangeState(FindWhiteState.get());
 				return;
 			}

@@ -9,6 +9,9 @@ import robot.MotorController.Direction;
 public class FindWhiteState extends State {
 	
 	private static FindWhiteState instance;
+	
+	public float leftSpeed = 220;
+	public float rightSpeed = 220;
 
 	private FindWhiteState() {
 	}
@@ -25,7 +28,7 @@ public class FindWhiteState extends State {
 		LCD.clear();
 	    LCD.drawString("Line: Search white", 0, 0);
 	    
-	    motors.setMotorSpeeds(220, 220);
+	    motors.setMotorSpeeds(leftSpeed, rightSpeed);
 	    motors.setMotorDirections(Direction.Forward, Direction.Forward);
 	}
 
