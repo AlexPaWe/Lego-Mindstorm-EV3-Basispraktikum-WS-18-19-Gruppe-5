@@ -1,6 +1,5 @@
 package robot;
 
-import lejos.hardware.Sound;
 import lejos.hardware.port.Port;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -24,21 +23,24 @@ public class SensorController {
 	private int colorId;
 	private float redValue;
 	private float distance;
-	private boolean touching;
+	private boolean leftTouching;
+	private boolean rightTouching;
 	
-	//private EV3ColorSensor colorSensor;
+	private EV3ColorSensor colorSensor;
 	private EV3UltrasonicSensor distanceSensor;
 	private EV3TouchSensor leftTouchSensor;
+	private EV3TouchSensor rightTouchSensor;
 	
-	//private SampleProvider redValueSampler;
+	private SampleProvider redValueSampler;
 
 	private SensorController() {
 		colorId = 0;
 		distance = 0;
-		//colorSensor = new EV3ColorSensor(COLOR_SENSOR_PORT);
-		//redValueSampler = colorSensor.getRedMode();
+		colorSensor = new EV3ColorSensor(COLOR_SENSOR_PORT);
+		redValueSampler = colorSensor.getRedMode();
 		distanceSensor = new EV3UltrasonicSensor(DISTANCE_SENSOR_PORT);
 		leftTouchSensor = new EV3TouchSensor(LEFT_TOUCH_SENSOR_PORT);
+		rightTouchSensor = new EV3TouchSensor(RIGHT_TOUCH_SENSOR_PORT);
 	}
 
 	/**
@@ -58,21 +60,22 @@ public class SensorController {
 	 */
 	public void tick() {
 		//updateColorId();
-		//updateRedValue();
-		//updateDistance();
-		//updateTouch();
+		updateRedValue();
+		updateDistance();
+		updateTouch();
 	}
 	
+	/*
 	private void updateColorId()
 	{
-		//colorId = colorSensor.getColorID();
-	}
+		colorId = colorSensor.getColorID();
+	}*/
 	
 	private void updateRedValue()
 	{
-        //float[] sample = new float[redValueSampler.sampleSize()];
-        //redValueSampler.fetchSample(sample, 0);
-        //redValue = sample[0];
+        float[] sample = new float[redValueSampler.sampleSize()];
+        redValueSampler.fetchSample(sample, 0);
+        redValue = sample[0];
 	}
 	
 	private void updateDistance()
@@ -84,14 +87,23 @@ public class SensorController {
 	}
 	
 	private void updateTouch() {
-        float[] sample = new float[leftTouchSensor.sampleSize()];
-        sample[0] = 0;
-        leftTouchSensor.fetchSample(sample, 0);
-        if(sample[0] == 1) {
+		float[] sampleLeft = new float[leftTouchSensor.sampleSize()];
+		sampleLeft[0] = 0;
+        leftTouchSensor.fetchSample(sampleLeft, 0);
+        if(sampleLeft[0] == 1) {
         	// TODO
             //Sound.playTone(800, 20);
         }
-        touching = (sample[0] == 1);
+        rightTouching = (sampleLeft[0] == 1);
+        
+        float[] sampleRight = new float[rightTouchSensor.sampleSize()];
+        sampleRight[0] = 0;
+        rightTouchSensor.fetchSample(sampleRight, 0);
+        if(sampleRight[0] == 1) {
+        	// TODO
+            //Sound.playTone(800, 20);
+        }
+        leftTouching = (sampleRight[0] == 1);
     }
 	
 	/**
@@ -122,7 +134,15 @@ public class SensorController {
 	 * Get whether the touch sensor is pressed.
 	 * @return
 	 */
-	public boolean isTouching() {
-		return touching;
+	public boolean isLeftTouching() {
+		return leftTouching;
+	}
+	
+	/**
+	 * Get whether the touch sensor is pressed.
+	 * @return
+	 */
+	public boolean isRightTouching() {
+		return rightTouching;
 	}
 }

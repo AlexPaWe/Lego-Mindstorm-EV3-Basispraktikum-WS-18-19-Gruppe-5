@@ -38,6 +38,7 @@ public class ModeMenuState extends State {
 	@Override
 	public void onBegin(boolean modeChanged) {
 		motors.stop();
+		motors.pivotDistanceSensorLeft();
 		redraw();
 	}
 
@@ -55,7 +56,7 @@ public class ModeMenuState extends State {
             selectedState = (selectedState + 1) % menuEntries.size();
             redraw();
         } else if (buttons.isKeyPressedAndReleased(Button.ENTER)) {
-            Executor.get().changeMode(menuEntries.get(selectedState));
+        	Executor.get().changeMode(menuEntries.get(selectedState));
         } else if (buttons.isKeyPressedAndReleased(Button.ESCAPE)) {
             System.exit(0);
         }

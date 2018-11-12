@@ -1,14 +1,7 @@
 package linefollow;
 
-import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
-import lejos.hardware.port.Port;
-import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.EV3TouchSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
-import lejos.robotics.SampleProvider;
 import robot.SensorController;
 import robot.MotorController.Direction;
 
@@ -16,22 +9,15 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220;
+	private static final int GENERAL_MOTOR_SPEED = 360; // TODO maybe slower?
 	private static final float K_P_KRIT = 1000f;
 	private static final float SHOULD_VALUE = 0.19f;
-	private static final float THRESHOLD = 40f;
+	private static final float THRESHOLD = 30f;
 	
 	private float speedL;
 	private float speedR;
-	
-	private final Port COLOR_SENSOR_PORT = SensorPort.S1;
-	
-	private EV3ColorSensor colorSensor;
-	private SampleProvider redValueSampler;
 
 	private LineFollowState() {
-		colorSensor = new EV3ColorSensor(COLOR_SENSOR_PORT);
-		redValueSampler = colorSensor.getRedMode();
 	}
 
 	public static State get() {
@@ -58,34 +44,35 @@ public class LineFollowState extends State {
 	
 	@Override
 	public void mainloop() {
-		float[] sample = new float[redValueSampler.sampleSize()];
-        redValueSampler.fetchSample(sample, 0);
-        
 		// compute the difference between measured light value and should be value.
-		float xd = sample[0] - SHOULD_VALUE;
+		float xd = SensorController.get().getRedValue() - SHOULD_VALUE;
 		
 		// translate the difference to the control value y.
 		float y = translate(xd);
 		
 		// TODO: Only for tests: Show control values
-		System.out.println(y);
+		System.out.println(xd);
 		
 		// TODO: Replace operators fittingly to direction change needed.
 		if (y < (-1 * THRESHOLD)) {
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
+			speedR = 0.5f * speedR;
 			//motorL.backward();
 			motors.setLeftMotorDirection(Direction.Backward);
-			speedL  = 0.5f * speedR;
+			speedL  = speedR;
 			//motorR.forward();
 			motors.setRightMotorDirection(Direction.Forward);
 		} else if (y > THRESHOLD) {
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
+			speedL = 0.5f * speedL;
 			//motorL.forward();
 			motors.setLeftMotorDirection(Direction.Forward);
-			speedR = 0.5f * speedL;
+			speedR = speedL;
 			//motorR.backward();
 			motors.setRightMotorDirection(Direction.Backward);
 		} else {
+			speedL = GENERAL_MOTOR_SPEED;
+			speedR = GENERAL_MOTOR_SPEED;
 			//motorL.forward();
 			motors.setLeftMotorDirection(Direction.Forward);
 			//motorR.forward();

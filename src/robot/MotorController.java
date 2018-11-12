@@ -19,8 +19,11 @@ public class MotorController {
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
 	
-
+	private enum Pivot {Right,Left,Down};
+	private Pivot distanceSensorPivot;
+	
 	private MotorController() {
+		distanceSensorPivot = Pivot.Left;
 	}
 
 	/**
@@ -234,11 +237,52 @@ public class MotorController {
 	
 	public void pivotDistanceSensorDown()
 	{
-		
+		switch(distanceSensorPivot)
+		{
+		case Left:
+			SMALL_MOTOR.rotate(90);
+			break;
+		case Right:
+			SMALL_MOTOR.rotate(-90);
+			break;
+		case Down:
+			break;
+		}
+
+		distanceSensorPivot = Pivot.Down;
 	}
 	
-	public void pivotDistanceSensorUp()
+	public void pivotDistanceSensorRight()
 	{
+		switch(distanceSensorPivot)
+		{
+		case Left:
+			SMALL_MOTOR.rotate(180);
+			break;
+		case Right:
+			break;
+		case Down:
+			SMALL_MOTOR.rotate(90);
+			break;
+		}
+
+		distanceSensorPivot = Pivot.Right;
+	}
+	
+	public void pivotDistanceSensorLeft()
+	{
+		switch(distanceSensorPivot)
+		{
+		case Left:
+			break;
+		case Right:
+			SMALL_MOTOR.rotate(-180);
+			break;
+		case Down:
+			SMALL_MOTOR.rotate(-90);
+			break;
+		}
 		
+		distanceSensorPivot = Pivot.Left;
 	}
 }

@@ -1,5 +1,7 @@
 package execution;
 
+import boxpush.BoxPushState;
+import bridge.BridgeState;
 import lejos.hardware.Button;
 import linefollow.LineFollowState;
 import modemenu.ModeMenuState;
@@ -42,10 +44,10 @@ public class Executor {
             changeMode(Mode.ModeMenu);
 		}
 		
-		//if (mode != Mode.ModeMenu)
-		//{
-		//	SensorController.get().tick();
-		//}
+		if (mode != Mode.ModeMenu)
+		{
+			SensorController.get().tick();
+		}
 		
 		state.mainloop();
 	}
@@ -63,10 +65,10 @@ public class Executor {
 		switch(newMode)
 		{
 		case BoxPush:
-			// TODO
+			startState = BoxPushState.get();
 			break;
 		case Bridge:
-			// TODO
+			startState = BridgeState.get();
 			break;
 		case ColorSearch:
 			// TODO
