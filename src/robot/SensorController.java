@@ -32,13 +32,18 @@ public class SensorController {
 	private EV3TouchSensor rightTouchSensor;
 	
 	private SampleProvider redValueSampler;
-
+	private SensorMode distanceSampler;
+	
+	private enum ColorMode {Red, ColorId};
+	private ColorMode colorMode;
+	
 	private SensorController() {
 		colorId = 0;
 		distance = 0;
 		colorSensor = new EV3ColorSensor(COLOR_SENSOR_PORT);
-		redValueSampler = colorSensor.getRedMode();
+		setColorModeToRed();
 		distanceSensor = new EV3UltrasonicSensor(DISTANCE_SENSOR_PORT);
+		distanceSampler = distanceSensor.getMode("Distance");
 		leftTouchSensor = new EV3TouchSensor(LEFT_TOUCH_SENSOR_PORT);
 		rightTouchSensor = new EV3TouchSensor(RIGHT_TOUCH_SENSOR_PORT);
 	}
@@ -59,17 +64,32 @@ public class SensorController {
 	 * Used in the main loop.
 	 */
 	public void tick() {
-		//updateColorId();
-		updateRedValue();
+		if (colorMode == ColorMode.Red)	{
+			updateRedValue();
+		}
+		else {
+			updateColorId();
+		}
 		updateDistance();
 		updateTouch();
 	}
 	
-	/*
+	public void setColorModeToColorId() {
+		redValueSampler = colorSensor.getColorIDMode();
+		colorMode = ColorMode.ColorId;
+		updateColorId();
+	}
+	
+	public void setColorModeToRed() {
+		redValueSampler = colorSensor.getRedMode();
+		colorMode = ColorMode.Red;
+		updateRedValue();
+	}
+	
 	private void updateColorId()
 	{
 		colorId = colorSensor.getColorID();
-	}*/
+	}
 	
 	private void updateRedValue()
 	{
@@ -80,7 +100,6 @@ public class SensorController {
 	
 	private void updateDistance()
 	{
-		SensorMode distanceSampler = distanceSensor.getMode("Distance");
         float[] sample = new float[distanceSampler.sampleSize()];
         distanceSampler.fetchSample(sample, 0);
         distance = sample[0];

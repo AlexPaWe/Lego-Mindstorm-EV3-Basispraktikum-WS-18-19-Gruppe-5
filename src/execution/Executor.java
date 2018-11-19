@@ -18,6 +18,7 @@ public class Executor {
 	
 	private Mode mode;
 	private State requestedState;
+	private Mode requestedMode;
 	private State state;
 	
 	private static Executor instance;
@@ -57,6 +58,12 @@ public class Executor {
 			requestedState = null;
 		}
 		
+		if (requestedMode != null)
+		{
+			changeMode(requestedMode);
+			requestedMode = null;
+		}
+		
 		state.mainloop();
 	}
 	
@@ -66,7 +73,12 @@ public class Executor {
 	 * Used when starting the robot or transitioning from one mode to another.
 	 * @param newMode
 	 */
-	public void changeMode(Mode newMode)
+	public void requestChangeMode(Mode newMode)
+	{
+		requestedMode = newMode;
+	}
+	 
+	private void changeMode(Mode newMode)
 	{
 		mode = newMode;
 		State startState = null;

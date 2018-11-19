@@ -68,7 +68,7 @@ public class ModeMenuState extends State {
             selectedState = (selectedState + 1) % menuEntries.size();
             redraw();
         } else if (buttons.isKeyPressedAndReleased(Button.ENTER)) {
-        	Executor.get().changeMode(menuEntries.get(selectedState));
+        	Executor.get().requestChangeMode(menuEntries.get(selectedState));
         } else if (buttons.isKeyPressedAndReleased(Button.ESCAPE)) {
             System.exit(0);
         }

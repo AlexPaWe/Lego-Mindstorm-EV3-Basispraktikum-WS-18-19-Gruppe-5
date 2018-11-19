@@ -34,6 +34,8 @@ public class ColorSearchState extends State {
 	
 	@Override
 	public void mainloop() {
-		// TODO
+
+		motors.backward();
+		return;
 	}
 }

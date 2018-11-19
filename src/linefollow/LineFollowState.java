@@ -22,6 +22,8 @@ public class LineFollowState extends State {
 	private float speedR;
 	
 	private Date lastOutput;
+	
+	private int gapsNavigated;
 
 	private LineFollowState() {
 	}
@@ -41,6 +43,8 @@ public class LineFollowState extends State {
 		LCD.clear();
 	    LCD.drawString("Line: P controller", 0, 0);
 	    lastOutput = new Date();
+	    gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
+	    SensorController.get().setColorModeToRed();
 	}
 
 	@Override
@@ -80,10 +84,6 @@ public class LineFollowState extends State {
 			if (motors.LEFT_MOTOR.getTachoCount() < -400)
 			{
 				navigateOverGap();
-				FindWhiteState state = (FindWhiteState)FindWhiteState.get();
-				state.leftSpeed = 220;
-				state.rightSpeed = 220;
-				Executor.get().requestChangeState(FindWhiteState.get());
 				return;
 			}
 		} else if (y > THRESHOLD) {
@@ -122,20 +122,32 @@ public class LineFollowState extends State {
 	
 	private void navigateOverGap()
 	{
+		gapsNavigated++;
+		
 		motors.setMotorDirections(Direction.Stop, Direction.Stop);
 		pmotors.setSpeed(220);
 		pmotors.rotate(-120);
-		pmotors.travel(20);
-		SensorController.get().tick();
-		if (SensorController.get().getRedValue() > 0.19)
-		{
-	    	// already on white
-	    	// might happen if the robot did not stand straight
+		
+		if (gapsNavigated == 3) {
+			Executor.get().requestChangeState(DriveToBoxPushAreaState.get());
 		}
-	    else
-	    {
-	    	pmotors.rotate(70);
-	    }
+		else {
+			pmotors.travel(20);
+			SensorController.get().tick();
+			if (SensorController.get().getRedValue() > 0.19)
+			{
+		    	// already on white
+		    	// might happen if the robot did not stand straight
+			}
+		    else
+		    {
+		    	pmotors.rotate(70);
+		    }	
+			FindWhiteState state = (FindWhiteState)FindWhiteState.get();
+			state.leftSpeed = 220;
+			state.rightSpeed = 220;
+			Executor.get().requestChangeState(FindWhiteState.get());
+		}
 	}
 	
 	/**
