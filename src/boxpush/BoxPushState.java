@@ -48,7 +48,7 @@ public class BoxPushState extends State {
 		//			-scan for box:
 		//				- difference in proximity of wall versus box greater then 20cm
 		SensorController sensorController = SensorController.get();
-		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference in the buffer values indicate a box
+		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference from the maximumDistance indicates a box
 			
 			sensorController.tick();
 			sampleBuffer[0] = sensorController.getDistance();
@@ -61,7 +61,7 @@ public class BoxPushState extends State {
 		pmotors.quickStop();
 		//			- drive 11.5cm more (to center box)
 		pmotors.travel(11.5);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnRight(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
@@ -69,11 +69,11 @@ public class BoxPushState extends State {
 		}
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-3);
-		//			- turn 90° left
+		//			- turn 90ï¿½ left
 		pmotors.turnLeft(90);
 		//			- drive 20cm forward
 		pmotors.travel(20);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
 		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
@@ -81,7 +81,7 @@ public class BoxPushState extends State {
 		}
 		//			- pull back a bit
 		pmotors.travel(-3);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnRight(90);
 		//			- drive forward until box is at the wall
 		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
