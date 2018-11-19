@@ -8,8 +8,8 @@ public class BoxPushState extends State {
 	
 	private static BoxPushState instance;
 	
-	private int i = 0;
-	private float[] sampleBuffer = {0.0f, 0.0f};
+	private float maximumDistance = 0f;
+	private float[] sampleBuffer = {0f};
 
 	private BoxPushState() {
 	}
@@ -48,10 +48,16 @@ public class BoxPushState extends State {
 		//			-scan for box:
 		//				- difference in proximity of wall versus box greater then 20cm
 		SensorController sensorController = SensorController.get();
-		while(Math.abs(sampleBuffer[0] - sampleBuffer[1]) < 0.2) {	// difference in the buffer values indicate a box
-			sampleBuffer[i] = sensorController.getDistance();
-			i = (i + 1) % 2;
+		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference in the buffer values indicate a box
+			
+			sensorController.tick();
+			sampleBuffer[0] = sensorController.getDistance();
+			
+			maximumDistance = Math.max(maximumDistance, sampleBuffer[0]);
+			
+			//System.out.println(sampleBuffer[0] + "  " + sampleBuffer[1]); // TODO: Only for test purposes
 		}
+		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
 		//			- drive 11.5cm more (to center box)
 		pmotors.travel(11.5);
