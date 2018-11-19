@@ -25,6 +25,7 @@ public class BoxPushState extends State {
 		LCD.clear();
 	    LCD.drawString("Box push", 0, 0);
 	    motors.stop();
+	    motors.pivotDistanceSensorRight();
 	}
 
 	@Override
@@ -35,6 +36,6 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		// TODO
+		// TODO: implement the following comments
 	}
 }
