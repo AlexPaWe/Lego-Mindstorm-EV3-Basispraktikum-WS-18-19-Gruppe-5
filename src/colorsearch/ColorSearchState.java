@@ -24,6 +24,8 @@ public class ColorSearchState extends State {
 		
 		LCD.clear();
 	    LCD.drawString("Color search", 0, 0);
+	    
+	    pmotors.turnRight(90);
 	}
 
 	@Override
@@ -35,7 +37,7 @@ public class ColorSearchState extends State {
 	@Override
 	public void mainloop() {
 
-		motors.backward();
+		//motors.backward();
 		return;
 	}
 }
