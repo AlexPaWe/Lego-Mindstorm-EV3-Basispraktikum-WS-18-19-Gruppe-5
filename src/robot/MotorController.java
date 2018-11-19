@@ -18,7 +18,7 @@ public class MotorController {
 	private final NXTRegulatedMotor SMALL_MOTOR = Motor.C;
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
-	public final Pivot START_PIVOT = Pivot.Down;
+	public final Pivot START_PIVOT = Pivot.Left;
 	
 	public enum Pivot {Right,Left,Down};
 	private Pivot distanceSensorPivot;
