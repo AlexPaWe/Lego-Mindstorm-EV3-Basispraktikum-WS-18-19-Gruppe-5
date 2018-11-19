@@ -18,7 +18,13 @@ public class MotorController {
 	private final NXTRegulatedMotor SMALL_MOTOR = Motor.C;
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
-	public final Pivot START_PIVOT = Pivot.Down;
+	public final Pivot START_PIVOT = Pivot.Left;
+	
+	// if 0, the distance sensor aims straight at the ground (in a 90 degree manor), when pivotted downwards
+	// if 45, the down state is 45 degrees to the left
+	// problem is e.g.: 15 deg is already A LOT. when approaching the downwards ramp of the bridge,
+	// the distance values get pretty huge!
+	private final int DOWNPIVOT_LEFT_OFFSET = 5;
 	
 	public enum Pivot {Right,Left,Down};
 	private Pivot distanceSensorPivot;
@@ -241,10 +247,10 @@ public class MotorController {
 		switch(distanceSensorPivot)
 		{
 		case Left:
-			SMALL_MOTOR.rotate(90);
+			SMALL_MOTOR.rotate(90 - DOWNPIVOT_LEFT_OFFSET);
 			break;
 		case Right:
-			SMALL_MOTOR.rotate(-90);
+			SMALL_MOTOR.rotate(-90 - DOWNPIVOT_LEFT_OFFSET);
 			break;
 		case Down:
 			break;
@@ -263,7 +269,7 @@ public class MotorController {
 		case Right:
 			break;
 		case Down:
-			SMALL_MOTOR.rotate(90);
+			SMALL_MOTOR.rotate(90 + DOWNPIVOT_LEFT_OFFSET);
 			break;
 		}
 
@@ -280,7 +286,7 @@ public class MotorController {
 			SMALL_MOTOR.rotate(-180);
 			break;
 		case Down:
-			SMALL_MOTOR.rotate(-90);
+			SMALL_MOTOR.rotate(-90 + DOWNPIVOT_LEFT_OFFSET);
 			break;
 		}
 		

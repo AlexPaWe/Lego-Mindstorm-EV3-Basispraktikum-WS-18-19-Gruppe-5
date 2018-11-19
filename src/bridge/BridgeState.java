@@ -14,10 +14,12 @@ public class BridgeState extends State {
 	
 	private static BridgeState instance;
 
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower?
-	private static final float THRESHOLD = 0.1f; // 1f = 1m, 0.1f = 10cm, 0.01f = 1cm
+	private static final int GENERAL_MOTOR_SPEED = 220;
+	private static final float THRESHOLD = 0.24f; // 1f = 1m, 0.1f = 10cm, 0.01f = 1cm
 	
 	private Date lastOutput;
+	
+	private Date rightTurnStarted;
 	
 	private BridgeState() {
 	}
@@ -38,6 +40,7 @@ public class BridgeState extends State {
 	    LCD.drawString("Bridge", 0, 0);
 	    lastOutput = new Date();
 	    MotorController.get().pivotDistanceSensorDown();
+	    pmotors.travel(10);
 	    motors.forward();
 	}
 
@@ -53,18 +56,28 @@ public class BridgeState extends State {
 		
 		String searchDirection = "";
 		
+		Date now = new Date();
+		
+		// TODO: to make the last 90deg turn, we need some changes
+		// e.g. tilt the sensor a bit, so the robot keeps a larger distance to the cliff, but that introduces new problems
+		// e.g. to physically offset the distance sensor away from the robot
+		// e.g. when turning to the right, always drive for a second, so you increase the distance?
+		
+		//long timeSinceLastRightTurn = now.getTime() - rightTurnStarted.getTime();
+		
 		if (distance > THRESHOLD) {
 			searchDirection = "R";
 			
-			motors.setMotorSpeeds(100, 300);
+			//rightTurnStarted = new Date();
+			
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED + 140, GENERAL_MOTOR_SPEED - 140);
 		} else {
 			searchDirection = "L";
 			
-			motors.setMotorSpeeds(300, 100);
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED - 140, GENERAL_MOTOR_SPEED + 140);
 		}
 		
 		// print debug every 250ms
-		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();
 		if (diff > 250)
 		{
