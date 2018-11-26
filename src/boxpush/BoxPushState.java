@@ -35,7 +35,7 @@ public class BoxPushState extends State {
 		LCD.clear();
 	    LCD.drawString("Box push", 0, 0);
 	    motors.stop();
-	    motors.pivotDistanceSensorRight();
+	    motors.pivotDistanceSensorLeft();
 	}
 
 	@Override
@@ -65,30 +65,34 @@ public class BoxPushState extends State {
 		// TODO: implement the following comments
 		
 		// find box: -drive slowly
-		pmotors.goForward();
+		pmotors.turnRight(180);
+		pmotors.goBackward();
 		pmotors.setSpeed(220); //TODO: check speed! Maybe faster?!
 		//			-scan for box:
 		//				- difference in proximity of wall versus box greater then 20cm
 		SensorController sensorController = SensorController.get();
-		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference from the maximumDistance indicates a box
+		sensorController.tick();
+		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.3) { // difference from the maximumDistance indicates a box
 			
 			sensorController.tick();
 			sampleBuffer[0] = sensorController.getDistance();
 			
 			maximumDistance = Math.max(maximumDistance, sampleBuffer[0]);
 			
+			LCD.clear();
+			LCD.drawString("maxDist: " + maximumDistance, 0, 0);
+			
 			//System.out.println(sampleBuffer[0] + "  " + sampleBuffer[1]); // TODO: Only for test purposes
 		}
 		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
-		//			- drive 11.5cm more (to center box)
-		pmotors.travel(11.5);
 		//			- turn 90° right
-		pmotors.turnRight(90);
+		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
+		pmotors.goForward();
+		pmotors.setSpeed(360);
 		sensorController.tick();
-		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
-			pmotors.goForward();
+		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
@@ -101,9 +105,10 @@ public class BoxPushState extends State {
 		//			- turn 90° right
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
+		pmotors.goForward();
+		pmotors.setSpeed(360);
 		sensorController.tick();
-		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
-			pmotors.goForward();
+		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
