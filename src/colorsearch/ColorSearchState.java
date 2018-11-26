@@ -2,10 +2,16 @@ package colorsearch;
 
 import execution.State;
 import lejos.hardware.lcd.LCD;
+import robot.SensorController;
 
 public class ColorSearchState extends State {
 	
 	private static ColorSearchState instance;
+	
+	SensorController sensorController;
+	
+	boolean redFound = false;
+	boolean whiteFound = false;
 
 	private ColorSearchState() {
 	}
@@ -24,6 +30,8 @@ public class ColorSearchState extends State {
 		
 		LCD.clear();
 	    LCD.drawString("Color search", 0, 0);
+	    
+	    sensorController = sensorController.get();
 	}
 
 	@Override
@@ -34,8 +42,8 @@ public class ColorSearchState extends State {
 	
 	@Override
 	public void mainloop() {
-
-		motors.backward();
-		return;
+		while (!redFound && !whiteFound) {
+			//TODO: Implement algorithm here!
+		}
 	}
 }
