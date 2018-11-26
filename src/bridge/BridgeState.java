@@ -5,6 +5,7 @@ import java.util.Date;
 import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
+import lejos.utility.Delay;
 import linefollow.FindWhiteState;
 import robot.MotorController;
 import robot.SensorController;
@@ -16,8 +17,11 @@ public class BridgeState extends State {
 
 	private static final int GENERAL_MOTOR_SPEED = 220;
 	private static final float THRESHOLD = 0.24f; // 1f = 1m, 0.1f = 10cm, 0.01f = 1cm
+	private static final float GOAL_HEIGHT_DISTANCE = 0.12f;
 	
 	private Date lastOutput;
+	
+	private Date stateStartDate;
 	
 	private Date rightTurnStarted;
 	
@@ -39,6 +43,7 @@ public class BridgeState extends State {
 		LCD.clear();
 	    LCD.drawString("Bridge", 0, 0);
 	    lastOutput = new Date();
+	    stateStartDate = new Date(9);
 	    MotorController.get().pivotDistanceSensorDown();
 	    pmotors.travel(10);
 	    motors.forward();
@@ -77,9 +82,26 @@ public class BridgeState extends State {
 			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED - 140, GENERAL_MOTOR_SPEED + 140);
 		}
 		
+		// To avoid hitting the wall at the bottom of the downwards ramp,
+		// we check the height, but only after some time after mission start,
+		// so we don't do this check for the upwards ramp.
+		// If the height is small enough, we don't hug the left cliff,
+		// but try to drive straight through the goal.
+		long startDiff = now.getTime() - stateStartDate.getTime();
+		if (startDiff > 30 * 1000)
+		{
+			if (distance > GOAL_HEIGHT_DISTANCE)
+			{
+				motors.stop();
+				Delay.msDelay(1000);
+				pmotors.rotate(-20);
+				Executor.get().requestChangeState(DriveToColorSearchState.get());
+			}
+		}
+		
 		// print debug every 250ms
-		long diff = now.getTime() - lastOutput.getTime();
-		if (diff > 250)
+		long debugDiff = now.getTime() - lastOutput.getTime();
+		if (debugDiff > 250)
 		{
 			lastOutput = now;
 			System.out.println(searchDirection + " | " + distance);
