@@ -8,6 +8,7 @@ import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
+import lejos.robotics.Color;
 import robot.SensorController;
 
 public class BoxPushState extends State {
@@ -123,6 +124,26 @@ public class BoxPushState extends State {
 		pmotors.setSpeed(220);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
+			sensorController.tick();
+		}
+		pmotors.quickStop();
+		
+		// After box has been pushed in the goal quadrant
+		
+		// pull back a bit
+		pmotors.travel(-3);
+		// turn 90° right
+		pmotors.turnRight(90);
+		// drive 15cm
+		pmotors.travel(15);
+		// turn 90° left
+		pmotors.turnLeft(90);
+		
+		pmotors.goForward();
+		pmotors.setSpeed(220);
+		sensorController.tick();
+		sensorController.setColorModeToColorId();
+		while(sensorController.getColorId() != Color.BLUE) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
