@@ -14,8 +14,8 @@ public class PilotedMotorController {
 	
 	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
 	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
-	private final float WHEEL_DIAMETER = 3.0f; //6.88f;
-	private final float TRACK_WIDTH = 12.0f;
+	private final float WHEEL_DIAMETER = 3.28f; //ursprünglich 3f, jetzt aber abgemessen;
+	private final float TRACK_WIDTH = 19f;	// ursprünglich 19f, jetzt aber abgemessen;
 	
 	private DifferentialPilot pilot;
 
