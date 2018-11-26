@@ -6,11 +6,14 @@ import execution.State;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.Color;
 import robot.SensorController;
+import robot.MotorController.Direction;
 
 public class DriveToColorSearchState extends State {
 	
 	private static DriveToColorSearchState instance;
 
+	private final static float SPEED = 180;
+	
 	private DriveToColorSearchState() {
 	}
 
@@ -29,6 +32,8 @@ public class DriveToColorSearchState extends State {
 		LCD.clear();
         LCD.drawString("Drive to Color Search", 0, 0);
         SensorController.get().setColorModeToColorId();
+        motors.setMotorSpeeds(SPEED, SPEED);
+	    motors.setMotorDirections(Direction.Forward, Direction.Forward);
 	}
 
 	@Override

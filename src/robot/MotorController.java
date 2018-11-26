@@ -24,7 +24,7 @@ public class MotorController {
 	// if 45, the down state is 45 degrees to the left
 	// problem is e.g.: 15 deg is already A LOT. when approaching the downwards ramp of the bridge,
 	// the distance values get pretty huge!
-	private final int DOWNPIVOT_LEFT_OFFSET = 5;
+	private final int DOWNPIVOT_LEFT_OFFSET = 0;
 	
 	public enum Pivot {Right,Left,Down};
 	private Pivot distanceSensorPivot;

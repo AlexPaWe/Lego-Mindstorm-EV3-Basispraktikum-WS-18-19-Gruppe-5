@@ -24,6 +24,7 @@ public class ColorSearchState extends State {
 		
 		LCD.clear();
 	    LCD.drawString("Color search", 0, 0);
+	    motors.stop();
 	}
 
 	@Override
@@ -35,7 +36,6 @@ public class ColorSearchState extends State {
 	@Override
 	public void mainloop() {
 
-		motors.backward();
 		return;
 	}
 }
