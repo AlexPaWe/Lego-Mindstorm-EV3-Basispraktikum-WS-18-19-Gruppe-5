@@ -86,11 +86,12 @@ public class BoxPushState extends State {
 		}
 		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
+		pmotors.travel(1.5);
 		//			- turn 90° right
 		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
-		pmotors.setSpeed(360);
+		pmotors.setSpeed(220);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
@@ -106,7 +107,7 @@ public class BoxPushState extends State {
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
 		pmotors.goForward();
-		pmotors.setSpeed(360);
+		pmotors.setSpeed(220);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
@@ -117,9 +118,16 @@ public class BoxPushState extends State {
 		//			- turn 90° right
 		pmotors.turnRight(90);
 		//			- drive forward until box is at the wall
-		while (!sensorController.isLeftTouching() && !sensorController.isRightTouching()) {
-			pmotors.goForward();
+		pmotors.goForward();
+		pmotors.setSpeed(220);
+		sensorController.tick();
+		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
+			sensorController.tick();
 		}
 		pmotors.quickStop();
+		
+		//At the end TODO: Keep it current!
+		Sound.beep();
+		Executor.get().requestChangeMode(Mode.ModeMenu);
 	}
 }
