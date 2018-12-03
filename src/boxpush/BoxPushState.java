@@ -38,7 +38,6 @@ public class BoxPushState extends State {
 		
 		LCD.clear();
 	    LCD.drawString("Box push", 0, 0);
-	    motors.pivotDistanceSensorRight();
 	    motors.stop();
 	    motors.pivotDistanceSensorLeft();
 	    

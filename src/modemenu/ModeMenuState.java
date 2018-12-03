@@ -44,8 +44,8 @@ public class ModeMenuState extends State {
 		case Left:
 			motors.pivotDistanceSensorLeft();
 			break;
-		case Right:
-			motors.pivotDistanceSensorRight();
+		case Park:
+			motors.pivotDistanceSensorPark();
 			break;
 		case Down:
 			motors.pivotDistanceSensorDown();
