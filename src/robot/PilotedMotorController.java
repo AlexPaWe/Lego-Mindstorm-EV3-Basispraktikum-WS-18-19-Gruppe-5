@@ -36,7 +36,7 @@ public class PilotedMotorController {
 	}
 
 	public void setSpeed(double speed) {
-		this.pilot.setTravelSpeed(speed);
+		this.pilot.setTravelSpeed((speed / 360) * pilot.getMaxTravelSpeed());
 	}
 
 	public void goForward() {

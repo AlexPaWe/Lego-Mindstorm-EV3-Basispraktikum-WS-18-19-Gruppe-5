@@ -18,8 +18,8 @@ public class BoxPushState extends State {
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
 	
-	private float maximumDistance = 0f;
-	private float[] sampleBuffer = {0f};
+	/* private float maximumDistance = 0f;
+	private float[] sampleBuffer = {0f}; */
 
 	private BoxPushState() {
 	}
@@ -75,48 +75,31 @@ public class BoxPushState extends State {
 		pmotors.turnRight(180);
 		pmotors.goBackward();
 		pmotors.setSpeed(SPEED_OF_WORK);
-		//			-scan for box:
-		//				- difference in proximity of wall versus box greater then 20cm
-		/* sensorController.tick();
-		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference from the maximumDistance indicates a
-																   // box TODO: Find the right value!
-			sensorController.tick();
-			sampleBuffer[0] = sensorController.getDistance();
-			
-			maximumDistance = Math.max(maximumDistance, sampleBuffer[0]);
-			
-			LCD.clear();
-			LCD.drawString("maxDist: " + maximumDistance, 0, 0);
-			
-			//System.out.println(sampleBuffer[0] + "  " + sampleBuffer[1]); // TODO: Only for test purposes
-		} */
+		
 		findBox();
 		
 		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
-		pmotors.travel(1.5);
+		pmotors.travel(-1.5);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° right
 		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
-		/* sensorController.tick();
+		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
-		} */
-		
-		pmotors.travel(50);
-		pmotors.setSpeed(SPEED_OF_WORK);
+		}
 		
 		pmotors.quickStop();
 		//			- pull back a little (e.g. 3cm)
-		pmotors.travel(-3);
+		pmotors.travel(-4);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° left
 		pmotors.turnLeft(90);
 		//			- drive 23cm forward
-		pmotors.travel(23);
+		pmotors.travel(28);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° right
 		pmotors.turnRight(90);
