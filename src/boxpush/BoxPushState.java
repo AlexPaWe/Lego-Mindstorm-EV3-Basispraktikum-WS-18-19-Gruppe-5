@@ -78,6 +78,9 @@ public class BoxPushState extends State {
 		
 		findBox();
 		
+		// set distance sensor to start position to avoid collision
+		motors.pivotDistanceSensorPark();
+		
 		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
 		pmotors.travel(-1.5);
