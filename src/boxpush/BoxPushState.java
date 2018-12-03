@@ -85,7 +85,7 @@ public class BoxPushState extends State {
 		pmotors.quickStop();
 		pmotors.travel(-1.5);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
@@ -99,12 +99,12 @@ public class BoxPushState extends State {
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-4);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		//			- turn 90° left
+		//			- turn 90ï¿½ left
 		pmotors.turnLeft(90);
 		//			- drive 23cm forward
 		pmotors.travel(28);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
 		pmotors.goForward();
@@ -117,7 +117,7 @@ public class BoxPushState extends State {
 		//			- pull back a bit
 		pmotors.travel(-2);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		//			- turn 90° right
+		//			- turn 90ï¿½ right
 		pmotors.turnRight(90);
 		//			- drive forward until box is at the wall
 		pmotors.goForward();
@@ -133,12 +133,12 @@ public class BoxPushState extends State {
 		// pull back a bit
 		pmotors.travel(-3);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		// turn 90° right
+		// turn 90ï¿½ right
 		pmotors.turnRight(90);
 		// drive 15cm
 		pmotors.travel(22);
 		pmotors.setSpeed(SPEED_OF_WORK);
-		// turn 90° left
+		// turn 90ï¿½ left
 		pmotors.turnLeft(90);
 		
 		pmotors.goForward();
