@@ -15,6 +15,8 @@ public class BoxPushState extends State {
 	
 	private static BoxPushState instance;
 	
+	private static final int SPEED_OF_WORK = 200;	//TODO: check speed! Maybe faster?!
+	
 	private float maximumDistance = 0f;
 	private float[] sampleBuffer = {0f};
 
@@ -47,7 +49,7 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		// make program stoppable
+		// make program stoppable (apparently it does not work)
 		Button.ESCAPE.addKeyListener(new KeyListener() {
 
 			@Override
@@ -69,7 +71,7 @@ public class BoxPushState extends State {
 		pmotors.travel(3);
 		pmotors.turnRight(180);
 		pmotors.goBackward();
-		pmotors.setSpeed(220); //TODO: check speed! Maybe faster?!
+		pmotors.setSpeed(SPEED_OF_WORK);
 		//			-scan for box:
 		//				- difference in proximity of wall versus box greater then 20cm
 		SensorController sensorController = SensorController.get();
@@ -93,7 +95,7 @@ public class BoxPushState extends State {
 		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
-		pmotors.setSpeed(220);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
@@ -109,7 +111,7 @@ public class BoxPushState extends State {
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
 		pmotors.goForward();
-		pmotors.setSpeed(220);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
@@ -121,7 +123,7 @@ public class BoxPushState extends State {
 		pmotors.turnRight(90);
 		//			- drive forward until box is at the wall
 		pmotors.goForward();
-		pmotors.setSpeed(220);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
@@ -140,7 +142,7 @@ public class BoxPushState extends State {
 		pmotors.turnLeft(90);
 		
 		pmotors.goForward();
-		pmotors.setSpeed(220);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		sensorController.setColorModeToColorId();
 		while(sensorController.getColorId() != Color.BLUE) {
