@@ -16,7 +16,9 @@ public class FindGateState extends State {
 	private static FindGateState instance;
 		
 	private static final float DISTANCE_MIN = 0.25f;
-	private static final float DISTANCE_MAX = 0.4f;
+	private static final float DISTANCE_MAX = 0.5f;
+	
+	private static int timesGapsSeen = 0;
 	
 	private Date lastOutput;
 	
@@ -38,6 +40,7 @@ public class FindGateState extends State {
 	    MotorController.get().pivotDistanceSensorLeft();
 	    motors.stop();
 	    Delay.msDelay(2000);
+	    timesGapsSeen = 0;
 	}
 
 	@Override
@@ -50,25 +53,42 @@ public class FindGateState extends State {
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
 		
-		//if (false)
-		if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
+		Date now = new Date();
+		long debugDiff = now.getTime() - lastOutput.getTime();
+		if (debugDiff >= 100) // print every 250ms
 		{
-			pmotors.travel(5);
-			pmotors.rotate(35);
-			Executor.get().requestChangeState(DriveToColorSearchState.get());
+			lastOutput = now;
+			System.out.println("g: " + timesGapsSeen + " |  d: " + distance);
+		}
+		
+		
+		if (timesGapsSeen == 0)
+		{
+			if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
+			{
+				++timesGapsSeen;
+			}
+			else
+			{
+				pmotors.rotate(-2);
+				Delay.msDelay(100);
+			}
 		}
 		else
 		{
-			pmotors.rotate(-5);
-			Delay.msDelay(250);
-		}
-		
-		Date now = new Date();
-		long debugDiff = now.getTime() - lastOutput.getTime();
-		if (debugDiff >= 250) // print every 250ms
-		{
-			lastOutput = now;
-			System.out.println(distance);
+			if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
+			{
+				++timesGapsSeen;
+				pmotors.rotate(-2);
+				Delay.msDelay(100);
+			}
+			else
+			{
+				MotorController.get().pivotDistanceSensorPark();
+				pmotors.travel(5);
+				pmotors.rotate(30 + (timesGapsSeen * 2));
+				Executor.get().requestChangeState(DriveToColorSearchState.get());
+			}
 		}
 	}
 }

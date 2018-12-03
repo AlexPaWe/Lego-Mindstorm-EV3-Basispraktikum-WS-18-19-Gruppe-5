@@ -28,7 +28,7 @@ public class BridgeState extends State {
 	 * 
 	 * 1f = 1m, 0.1f = 10cm, 0.01f = 1cm
 	 */
-	private static final float GROUND_DISTANCE_THRESHOLD = 0.09f;
+	private static final float GROUND_DISTANCE_THRESHOLD = 0.14f;
 	
 	/*
 	 * Time to ignore the win condition. Used that we don't check the
@@ -42,7 +42,7 @@ public class BridgeState extends State {
 	 * When the distance sensor value is higher than the GROUND_DISTANCE_THRESHOLD,
 	 * but lower than this, it detects the goal.
 	 */
-	private static final float GOAL_HEIGHT_DISTANCE_MIN = 0.13f;
+	private static final float GOAL_HEIGHT_DISTANCE_MIN = 0.14f;
 	private static final float GOAL_HEIGHT_DISTANCE_MAX = 0.16f;
 	
 	private Date lastOutput;
@@ -94,15 +94,13 @@ public class BridgeState extends State {
 			searchDirection = "R";
 			
 			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED * 0.25f);
-	
-			checkForGoal(distance);
-			
-			//Delay.msDelay(250);
 		} else {
 			searchDirection = "L";
 			
 			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED * 0.25f, GENERAL_MOTOR_SPEED);
 		}
+		
+		checkForGoal(distance);
 		
 		logDebug(searchDirection, distance);
 	}
