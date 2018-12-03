@@ -15,8 +15,8 @@ public class FindGateState extends State {
 	
 	private static FindGateState instance;
 		
-	private static final float DISTANCE_MIN = 0.3f;
-	private static final float DISTANCE_MAX = 0.7f;
+	private static final float DISTANCE_MIN = 0.25f;
+	private static final float DISTANCE_MAX = 0.4f;
 	
 	private Date lastOutput;
 	
@@ -50,20 +50,22 @@ public class FindGateState extends State {
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
 		
+		//if (false)
 		if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
 		{
+			pmotors.travel(5);
 			pmotors.rotate(35);
 			Executor.get().requestChangeState(DriveToColorSearchState.get());
 		}
 		else
 		{
-			pmotors.rotate(-10);
-			Delay.msDelay(500);
+			pmotors.rotate(-5);
+			Delay.msDelay(250);
 		}
 		
 		Date now = new Date();
 		long debugDiff = now.getTime() - lastOutput.getTime();
-		if (debugDiff > 250) // print every 250ms
+		if (debugDiff >= 250) // print every 250ms
 		{
 			lastOutput = now;
 			System.out.println(distance);

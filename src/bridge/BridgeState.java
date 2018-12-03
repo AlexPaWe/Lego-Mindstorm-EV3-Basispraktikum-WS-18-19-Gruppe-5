@@ -15,7 +15,7 @@ public class BridgeState extends State {
 	
 	private static BridgeState instance;
 
-	private static final int GENERAL_MOTOR_SPEED = 200;
+	private static final int GENERAL_MOTOR_SPEED = 360;
 	
 	/*
 	 * If the distance sensor value is below this, it counts as ground.
@@ -48,8 +48,6 @@ public class BridgeState extends State {
 	private Date lastOutput;
 	
 	private Date stateStartDate;
-	
-	private Date rightTurnStarted;
 	
 	private BridgeState() {
 	}
@@ -95,15 +93,15 @@ public class BridgeState extends State {
 		if (distance > GROUND_DISTANCE_THRESHOLD) {
 			searchDirection = "R";
 			
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED + 120, GENERAL_MOTOR_SPEED - 120);
-			
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED * 0.25f);
+	
 			checkForGoal(distance);
 			
 			//Delay.msDelay(250);
 		} else {
 			searchDirection = "L";
 			
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED - 120, GENERAL_MOTOR_SPEED + 120);
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED * 0.25f, GENERAL_MOTOR_SPEED);
 		}
 		
 		logDebug(searchDirection, distance);
