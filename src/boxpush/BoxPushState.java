@@ -14,6 +14,7 @@ import robot.SensorController;
 public class BoxPushState extends State {
 	
 	private static BoxPushState instance;
+	private SensorController sensorController;
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
 	
@@ -39,6 +40,9 @@ public class BoxPushState extends State {
 	    LCD.drawString("Box push", 0, 0);
 	    motors.stop();
 	    motors.pivotDistanceSensorLeft();
+	    
+	    // Set SensorController instance for this State.
+	    sensorController = SensorController.get();
 	}
 
 	@Override
@@ -49,7 +53,7 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		// make program stoppable (apparently it does not work)
+		/*// make program stoppable (apparently it does not work)
 		Button.ESCAPE.addKeyListener(new KeyListener() {
 
 			@Override
@@ -63,19 +67,17 @@ public class BoxPushState extends State {
 				//Executor.get().requestChangeMode(Mode.ModeMenu);
 			}
 			
-		});
-		
-		// TODO: implement the following comments
+		}); */
 		
 		// find box: -drive slowly
 		pmotors.travel(10);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		pmotors.turnRight(180);
 		pmotors.goBackward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		//			-scan for box:
 		//				- difference in proximity of wall versus box greater then 20cm
-		SensorController sensorController = SensorController.get();
-		sensorController.tick();
+		/* sensorController.tick();
 		while(Math.abs(maximumDistance - sampleBuffer[0]) < 0.2) { // difference from the maximumDistance indicates a
 																   // box TODO: Find the right value!
 			sensorController.tick();
@@ -87,10 +89,13 @@ public class BoxPushState extends State {
 			LCD.drawString("maxDist: " + maximumDistance, 0, 0);
 			
 			//System.out.println(sampleBuffer[0] + "  " + sampleBuffer[1]); // TODO: Only for test purposes
-		}
+		} */
+		findBox();
+		
 		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
 		pmotors.travel(1.5);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° right
 		pmotors.turnLeft(90);
 		//			- drive till the box is at the wall (or both touch sensors are activated)
@@ -102,14 +107,17 @@ public class BoxPushState extends State {
 		} */
 		
 		pmotors.travel(50);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		
 		pmotors.quickStop();
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-3);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° left
 		pmotors.turnLeft(90);
 		//			- drive 23cm forward
 		pmotors.travel(23);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° right
 		pmotors.turnRight(90);
 		//			- drive until both touch sensors hit the wall
@@ -122,6 +130,7 @@ public class BoxPushState extends State {
 		pmotors.quickStop();
 		//			- pull back a bit
 		pmotors.travel(-2);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		//			- turn 90° right
 		pmotors.turnRight(90);
 		//			- drive forward until box is at the wall
@@ -137,10 +146,12 @@ public class BoxPushState extends State {
 		
 		// pull back a bit
 		pmotors.travel(-3);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		// turn 90° right
 		pmotors.turnRight(90);
 		// drive 15cm
 		pmotors.travel(22);
+		pmotors.setSpeed(SPEED_OF_WORK);
 		// turn 90° left
 		pmotors.turnLeft(90);
 		
@@ -157,4 +168,35 @@ public class BoxPushState extends State {
 		Sound.beep();
 		Executor.get().requestChangeMode(Mode.ModeMenu);
 	}
+	
+	
+	private void findBox() {
+		float[] sampleArray = new float[10];
+		for (int i = 0; i < sampleArray.length; i++)
+			sampleArray[i] = 50f;	// TODO: Find best default distance to distant wall.
+		boolean found = false;
+		float average;
+		int i = 0;
+		while (!found) {
+			average = createAverage(sampleArray);
+			
+			sensorController.tick();
+			sampleArray[i] = sensorController.getDistance();
+			i = (i + 1) % sampleArray.length;
+			
+			System.out.println("Av. = " + average + "; cur. = " + sampleArray[i]);	// TODO: Remove Debug Output.
+			
+			if (Math.abs(average - sampleArray[i]) > 20)
+				found = true;
+		}
+	}
+	
+	private float createAverage(float[] array) {
+		float sum = 0;
+		for (int i = 0; i < array.length ; i++) {
+			sum += array[i];
+		}
+		return sum / array.length;
+	}
 }
+
