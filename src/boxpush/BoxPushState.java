@@ -173,7 +173,7 @@ public class BoxPushState extends State {
 	private void findBox() {
 		float[] sampleArray = new float[10];
 		for (int i = 0; i < sampleArray.length; i++)
-			sampleArray[i] = 50f;	// TODO: Find best default distance to distant wall.
+			sampleArray[i] = 0.5f;	// TODO: Find best default distance to distant wall.
 		boolean found = false;
 		float average;
 		int i = 0;
@@ -186,7 +186,7 @@ public class BoxPushState extends State {
 			
 			System.out.println("Av. = " + average + "; cur. = " + sampleArray[i]);	// TODO: Remove Debug Output.
 			
-			if (Math.abs(average - sampleArray[i]) > 20)
+			if (Math.abs(average - sampleArray[i]) > 0.2)
 				found = true;
 		}
 	}
