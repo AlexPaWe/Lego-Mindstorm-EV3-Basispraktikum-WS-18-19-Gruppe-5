@@ -15,7 +15,7 @@ public class BoxPushState extends State {
 	
 	private static BoxPushState instance;
 	
-	private static final int SPEED_OF_WORK = 200;	//TODO: check speed! Maybe faster?!
+	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
 	
 	private float maximumDistance = 0f;
 	private float[] sampleBuffer = {0f};
@@ -68,7 +68,7 @@ public class BoxPushState extends State {
 		// TODO: implement the following comments
 		
 		// find box: -drive slowly
-		pmotors.travel(3);
+		pmotors.travel(10);
 		pmotors.turnRight(180);
 		pmotors.goBackward();
 		pmotors.setSpeed(SPEED_OF_WORK);
@@ -96,10 +96,13 @@ public class BoxPushState extends State {
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
-		sensorController.tick();
+		/* sensorController.tick();
 		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
 			sensorController.tick();
-		}
+		} */
+		
+		pmotors.travel(50);
+		
 		pmotors.quickStop();
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-3);
@@ -137,7 +140,7 @@ public class BoxPushState extends State {
 		// turn 90° right
 		pmotors.turnRight(90);
 		// drive 15cm
-		pmotors.travel(15);
+		pmotors.travel(22);
 		// turn 90° left
 		pmotors.turnLeft(90);
 		
