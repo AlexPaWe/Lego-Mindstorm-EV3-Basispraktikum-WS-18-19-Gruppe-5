@@ -53,7 +53,7 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		/*// make program stoppable (apparently it does not work)
+		// make program stoppable (apparently it does not work)
 		Button.ESCAPE.addKeyListener(new KeyListener() {
 
 			@Override
@@ -67,7 +67,7 @@ public class BoxPushState extends State {
 				//Executor.get().requestChangeMode(Mode.ModeMenu);
 			}
 			
-		}); */
+		});
 		
 		// find box: -drive slowly
 		pmotors.travel(10);
