@@ -53,7 +53,8 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		// make program stoppable (apparently it does not work)
+		/* TODO: Find a way to make program stoppable, a KeyListener is not working because of the absence of multitasking in
+		   the OS. (To be tested!) */
 		Button.ESCAPE.addKeyListener(new KeyListener() {
 
 			@Override
@@ -64,7 +65,7 @@ public class BoxPushState extends State {
 
 			@Override
 			public void keyReleased(Key k) {
-				//Executor.get().requestChangeMode(Mode.ModeMenu);
+				Executor.get().requestChangeMode(Mode.ModeMenu);
 			}
 			
 		});
