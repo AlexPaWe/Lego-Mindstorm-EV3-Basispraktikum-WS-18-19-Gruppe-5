@@ -127,7 +127,7 @@ public class BoxPushState extends State {
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
-		while (!pushBuffer(1000)) {
+		while (!pushBuffer(PUSH_BUFFER)) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
