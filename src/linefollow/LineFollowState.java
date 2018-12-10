@@ -79,10 +79,11 @@ public class LineFollowState extends State {
 			
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = 0.5f * speedR;
-			//motorL.backward();
-			motors.setLeftMotorDirection(Direction.Backward);
 			speedL  = speedR;
-			//motorR.forward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
+			motors.setLeftMotorDirection(Direction.Backward);
 			motors.setRightMotorDirection(Direction.Forward);
 			
 			if (motors.LEFT_MOTOR.getTachoCount() < -400)
@@ -95,10 +96,11 @@ public class LineFollowState extends State {
 			
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedL = 0.5f * speedL;
-			//motorL.forward();
-			motors.setLeftMotorDirection(Direction.Forward);
 			speedR = speedL;
-			//motorR.backward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
+			motors.setLeftMotorDirection(Direction.Forward);
 			motors.setRightMotorDirection(Direction.Backward);
 		} else {
 			motors.LEFT_MOTOR.resetTachoCount();
@@ -106,14 +108,15 @@ public class LineFollowState extends State {
 			
 			speedL = GENERAL_MOTOR_SPEED;
 			speedR = GENERAL_MOTOR_SPEED;
-			//motorL.forward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
 			motors.setLeftMotorDirection(Direction.Forward);
-			//motorR.forward();
 			motors.setRightMotorDirection(Direction.Forward);
 		}
 		
-		motors.setLeftMotorSpeed(speedL);
-		motors.setRightMotorSpeed(speedR);
+		//motors.setLeftMotorSpeed(speedL);
+		//motors.setRightMotorSpeed(speedR);
 		
 		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();

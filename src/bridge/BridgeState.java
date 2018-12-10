@@ -6,10 +6,8 @@ import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
-import linefollow.FindWhiteState;
 import robot.MotorController;
 import robot.SensorController;
-import robot.MotorController.Direction;
 
 public class BridgeState extends State {
 	
@@ -28,6 +26,7 @@ public class BridgeState extends State {
 	 * 
 	 * 1f = 1m, 0.1f = 10cm, 0.01f = 1cm
 	 */
+	private static final float GROUND_DISTANCE_THRESHOLD_PEACE_TIME = 0.09f;
 	private static final float GROUND_DISTANCE_THRESHOLD = 0.14f;
 	
 	/*
@@ -36,7 +35,9 @@ public class BridgeState extends State {
 	 * 
 	 * In seconds!
 	 */
-	private static final long PEACE_TIME = 20; // TODO
+	private static final long PEACE_TIME_DURATION = 10; // TODO
+	private static final float PEACE_TIME_THRESHOLD = 0.2f;
+	private boolean peaceTime;
 	
 	/*
 	 * When the distance sensor value is higher than the GROUND_DISTANCE_THRESHOLD,
@@ -72,6 +73,7 @@ public class BridgeState extends State {
 	    MotorController.get().pivotDistanceSensorDown();
 	    Delay.msDelay(250);
 	    motors.forward();
+	    peaceTime = true;
 	}
 
 	@Override
@@ -89,9 +91,29 @@ public class BridgeState extends State {
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
 		
+		if (distance > 10) {distance=0;}
+		
 		String searchDirection = "";
 		
-		if (distance > GROUND_DISTANCE_THRESHOLD) {
+		float distanceThreshold;
+		if (peaceTime)
+		{
+			distanceThreshold = GROUND_DISTANCE_THRESHOLD_PEACE_TIME;
+			//Date now = new Date();
+			//long startDiff = now.getTime() - stateStartDate.getTime();
+			//if (startDiff > PEACE_TIME_DURATION * 1000)
+			if (distance > PEACE_TIME_THRESHOLD)
+			{
+				peaceTime = false;
+				System.out.println("PEACE TIME OVER");
+			}
+		}
+		else {
+			distanceThreshold = GROUND_DISTANCE_THRESHOLD;
+			checkForGoal(distance);
+		}
+		
+		if (distance > distanceThreshold) {
 			searchDirection = "R";
 			
 			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED * 0.25f);
@@ -101,29 +123,17 @@ public class BridgeState extends State {
 			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED * 0.25f, GENERAL_MOTOR_SPEED);
 		}
 		
-		checkForGoal(distance);
-		
 		logDebug(searchDirection, distance);
 	}
 	
 	private void checkForGoal(float distance)
 	{
-		// To avoid hitting the wall at the bottom of the downwards ramp,
-		// we check the height, but only after some time after mission start,
-		// so we don't do this check for the upwards ramp.
-		// If the height is small enough, we don't control along the left cliff,
-		// but try to drive straight through the goal.
-		Date now = new Date();
-		long startDiff = now.getTime() - stateStartDate.getTime();
-		if (startDiff > PEACE_TIME * 1000)
+		if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
 		{
-			if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
-			{
-				System.out.println("GOAL FOUND");
-				motors.stop();
-				Delay.msDelay(1000);
-				Executor.get().requestChangeState(FindGateState.get());
-			}
+			System.out.println("GOAL FOUND");
+			motors.stop();
+			Delay.msDelay(1000);
+			Executor.get().requestChangeState(FindGateState.get());
 		}
 	}
 	

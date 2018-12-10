@@ -17,7 +17,7 @@ public class BoxPushState extends State {
 	private SensorController sensorController;
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
-	private static final int PUSH_BUFFER = 1000;	// Time to wait till a push on both touch sensors is counted
+	private static final int PUSH_BUFFER = 3000;	// Time to wait till a push on both touch sensors is counted
 	
 	/* private float maximumDistance = 0f;
 	private float[] sampleBuffer = {0f}; */
@@ -74,7 +74,7 @@ public class BoxPushState extends State {
 		});
 		
 		// find box: -drive slowly
-		pmotors.travel(10);
+		pmotors.travel(20);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		pmotors.turnRight(180);
 		pmotors.goBackward();

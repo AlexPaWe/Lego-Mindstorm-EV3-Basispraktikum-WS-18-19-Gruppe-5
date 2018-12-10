@@ -16,9 +16,9 @@ public class DriveToBoxPushAreaState extends State {
 	private static DriveToBoxPushAreaState instance;
 	
 	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower?
-	private static final float K_P_KRIT = 1400f;
-	private static final float SHOULD_VALUE = 0.03f; // distance to the wall in m
-	private static final float THRESHOLD = 3f;
+	private static final float K_P_KRIT = 2000f;
+	private static final float SHOULD_VALUE = 0.05f; // distance to the wall in m
+	private static final float THRESHOLD = 0.01f;
 	
 	private float speedL;
 	private float speedR;
@@ -47,7 +47,7 @@ public class DriveToBoxPushAreaState extends State {
         lastOutput = new Date();
         pmotors.setSpeed(GENERAL_MOTOR_SPEED);
 		pmotors.rotate(-80);
-		pmotors.travel(25);
+		pmotors.travel(15);
 		pmotors.rotate(-20);
         motors.setLeftMotorDirection(Direction.Forward);
 		motors.setRightMotorDirection(Direction.Forward);
@@ -69,7 +69,7 @@ public class DriveToBoxPushAreaState extends State {
 		}
 		
 		float distance = SensorController.get().getDistance();
-		if (distance > 10)
+		if (distance > 10) // infinity = 0
 		{
 			distance = 0;
 		}
@@ -80,12 +80,12 @@ public class DriveToBoxPushAreaState extends State {
 		
 		String searchDirection = "";
 		
-		if (y < (-1 * THRESHOLD)) {
+		if (xd < THRESHOLD) {
 			searchDirection = "R";
 			
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = GENERAL_MOTOR_SPEED - Math.abs(y);
-		} else if (y > THRESHOLD) {
+		} else if (xd > THRESHOLD) {
 			searchDirection = "L";
 			
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
@@ -97,10 +97,10 @@ public class DriveToBoxPushAreaState extends State {
 			speedR = GENERAL_MOTOR_SPEED;
 		}
 		
-		motors.setLeftMotorDirection(Direction.Forward);
-		motors.setRightMotorDirection(Direction.Forward);
 		motors.setLeftMotorSpeed(speedL);
 		motors.setRightMotorSpeed(speedR);
+		motors.setLeftMotorDirection(Direction.Forward);
+		motors.setRightMotorDirection(Direction.Forward);
 		
 		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();

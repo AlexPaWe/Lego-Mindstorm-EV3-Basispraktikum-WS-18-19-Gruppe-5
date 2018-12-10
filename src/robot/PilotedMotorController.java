@@ -21,7 +21,8 @@ public class PilotedMotorController {
 
 	private PilotedMotorController() {
 		pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
-		pilot.setAcceleration(60);
+		//pilot.setAcceleration(60);
+		pilot.setRotateSpeed(60);
 	}
 
 	/**
