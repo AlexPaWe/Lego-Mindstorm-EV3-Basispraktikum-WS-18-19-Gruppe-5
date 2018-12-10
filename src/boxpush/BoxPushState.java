@@ -143,16 +143,29 @@ public class BoxPushState extends State {
 		
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
-		sensorController.tick();
-		sensorController.setColorModeToColorId();
-		while(sensorController.getColorId() != Color.BLUE) {
+		sensorController.setColorModeToRGB();
+		
+		boolean loop = true;
+		
+		/*
+		 * rgb[2] =
+		 * 0.018 brown
+		 * 0.054 blue with distance
+		 * 0.086 blue
+		 */
+		while(loop) {
 			sensorController.tick();
+			float[] rgb = sensorController.getRgbValue();
+			if (rgb[2] > 0.04)
+			{
+				loop = false;
+			}
 		}
 		pmotors.quickStop();
 		
 		//At the end TODO: Keep it current!
 		Sound.beep();
-		Executor.get().requestChangeMode(Mode.ModeMenu);
+		Executor.get().requestChangeMode(Mode.Bridge);
 	}
 	
 	

@@ -22,6 +22,7 @@ public class SensorController {
 	
 	private int colorId;
 	private float redValue;
+	private float[] rgbValue;
 	private float distance;
 	private boolean leftTouching;
 	private boolean rightTouching;
@@ -31,10 +32,11 @@ public class SensorController {
 	private EV3TouchSensor leftTouchSensor;
 	private EV3TouchSensor rightTouchSensor;
 	
+	private SampleProvider rgbValueSampler;
 	private SampleProvider redValueSampler;
 	private SensorMode distanceSampler;
 	
-	private enum ColorMode {Red, ColorId};
+	private enum ColorMode {Red, ColorId, RGB};
 	private ColorMode colorMode;
 	
 	private SensorController() {
@@ -67,6 +69,10 @@ public class SensorController {
 		if (colorMode == ColorMode.Red)	{
 			updateRedValue();
 		}
+		else if (colorMode == ColorMode.RGB)
+		{
+			updateRGBValue();
+		}
 		else {
 			updateColorId();
 		}
@@ -86,6 +92,12 @@ public class SensorController {
 		updateRedValue();
 	}
 	
+	public void setColorModeToRGB() {
+		rgbValueSampler = colorSensor.getRGBMode();
+		colorMode = ColorMode.RGB;
+		updateRGBValue();
+	}
+	
 	private void updateColorId()
 	{
 		colorId = colorSensor.getColorID();
@@ -96,6 +108,13 @@ public class SensorController {
         float[] sample = new float[redValueSampler.sampleSize()];
         redValueSampler.fetchSample(sample, 0);
         redValue = sample[0];
+	}
+	
+	private void updateRGBValue()
+	{
+        float[] sample = new float[rgbValueSampler.sampleSize()];
+        rgbValueSampler.fetchSample(sample, 0);
+        rgbValue = sample;
 	}
 	
 	private void updateDistance()
@@ -147,6 +166,14 @@ public class SensorController {
 	 */
 	public float getRedValue() {
 		return redValue;
+	}
+	
+	/**
+	 * Get the measured rgb value of the color sensor.
+	 * @return
+	 */
+	public float[] getRgbValue() {
+		return rgbValue;
 	}
 	
 	/**

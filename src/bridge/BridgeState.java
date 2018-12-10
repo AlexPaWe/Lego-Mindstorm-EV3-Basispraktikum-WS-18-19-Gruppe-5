@@ -36,7 +36,7 @@ public class BridgeState extends State {
 	 * 
 	 * In seconds!
 	 */
-	private static final long PEACE_TIME = 5; // TODO
+	private static final long PEACE_TIME = 20; // TODO
 	
 	/*
 	 * When the distance sensor value is higher than the GROUND_DISTANCE_THRESHOLD,
@@ -68,8 +68,9 @@ public class BridgeState extends State {
 	    LCD.drawString("Bridge", 0, 0);
 	    lastOutput = new Date();
 	    stateStartDate = new Date();
-	    MotorController.get().pivotDistanceSensorDown();
 	    pmotors.travel(30);
+	    MotorController.get().pivotDistanceSensorDown();
+	    Delay.msDelay(250);
 	    motors.forward();
 	}
 

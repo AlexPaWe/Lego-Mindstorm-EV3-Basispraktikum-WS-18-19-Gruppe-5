@@ -15,10 +15,10 @@ public class DriveToBoxPushAreaState extends State {
 	
 	private static DriveToBoxPushAreaState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower?
-	private static final float K_P_KRIT = 200f;
-	private static final float SHOULD_VALUE = 0.1f; // distance to the wall in m
-	private static final float THRESHOLD = 5f;
+	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower?
+	private static final float K_P_KRIT = 1400f;
+	private static final float SHOULD_VALUE = 0.03f; // distance to the wall in m
+	private static final float THRESHOLD = 3f;
 	
 	private float speedL;
 	private float speedR;
@@ -45,6 +45,12 @@ public class DriveToBoxPushAreaState extends State {
         SensorController.get().setColorModeToColorId();
         MotorController.get().pivotDistanceSensorLeft();
         lastOutput = new Date();
+        pmotors.setSpeed(GENERAL_MOTOR_SPEED);
+		pmotors.rotate(-80);
+		pmotors.travel(25);
+		pmotors.rotate(-20);
+        motors.setLeftMotorDirection(Direction.Forward);
+		motors.setRightMotorDirection(Direction.Forward);
 	}
 
 	@Override
@@ -57,11 +63,16 @@ public class DriveToBoxPushAreaState extends State {
 	public void mainloop() {
 		if (SensorController.get().getColorId() == Color.BLUE) 
 		{
+			System.out.println("BOX PUSH");
 			Executor.get().requestChangeMode(Mode.BoxPush);
 			return;
 		}
 		
 		float distance = SensorController.get().getDistance();
+		if (distance > 10)
+		{
+			distance = 0;
+		}
 		float xd = distance - SHOULD_VALUE;
 		
 		// translate the difference to the control value y.
@@ -80,15 +91,14 @@ public class DriveToBoxPushAreaState extends State {
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedL = GENERAL_MOTOR_SPEED - Math.abs(y);
 		} else {
-			motors.LEFT_MOTOR.resetTachoCount();
 			searchDirection = "N";
 			
 			speedL = GENERAL_MOTOR_SPEED;
 			speedR = GENERAL_MOTOR_SPEED;
-			motors.setLeftMotorDirection(Direction.Forward);
-			motors.setRightMotorDirection(Direction.Forward);
 		}
 		
+		motors.setLeftMotorDirection(Direction.Forward);
+		motors.setRightMotorDirection(Direction.Forward);
 		motors.setLeftMotorSpeed(speedL);
 		motors.setRightMotorSpeed(speedR);
 		
@@ -98,6 +108,7 @@ public class DriveToBoxPushAreaState extends State {
 		{
 			lastOutput = now;
 			System.out.println(searchDirection + " | " + distance + " | " + xd + " | " + y);
+			//System.out.println(speedR + " " + speedL);
 		}
 	}
 

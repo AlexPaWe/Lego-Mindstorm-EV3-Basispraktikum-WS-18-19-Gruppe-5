@@ -13,7 +13,7 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower?
+	private static final int GENERAL_MOTOR_SPEED = 300; // TODO maybe slower?
 	private static final float K_P_KRIT = 1000f;
 	private static final float SHOULD_VALUE = 0.19f;
 	private static final float THRESHOLD = 30f;
@@ -43,8 +43,12 @@ public class LineFollowState extends State {
 		LCD.clear();
 	    LCD.drawString("Line: P controller", 0, 0);
 	    lastOutput = new Date();
-	    gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
 	    SensorController.get().setColorModeToRed();
+	    
+	    if (modeChanged)
+	    {
+	    	gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
+	    }
 	}
 
 	@Override
@@ -116,7 +120,7 @@ public class LineFollowState extends State {
 		if (diff > 250)
 		{
 			lastOutput = now;
-			System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount());
+			//System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount());
 		}
 	}
 	
@@ -125,13 +129,13 @@ public class LineFollowState extends State {
 		gapsNavigated++;
 		
 		motors.setMotorDirections(Direction.Stop, Direction.Stop);
-		pmotors.setSpeed(220);
-		pmotors.rotate(-120);
 		
 		if (gapsNavigated == 3) {
 			Executor.get().requestChangeState(DriveToBoxPushAreaState.get());
 		}
 		else {
+			pmotors.setSpeed(220);
+			pmotors.rotate(-110);
 			pmotors.travel(20);
 			SensorController.get().tick();
 			if (SensorController.get().getRedValue() > 0.19)
@@ -141,7 +145,7 @@ public class LineFollowState extends State {
 			}
 		    else
 		    {
-		    	pmotors.rotate(70);
+		    	pmotors.rotate(60);
 		    }	
 			FindWhiteState state = (FindWhiteState)FindWhiteState.get();
 			state.leftSpeed = 220;
