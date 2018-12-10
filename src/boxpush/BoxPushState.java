@@ -17,9 +17,12 @@ public class BoxPushState extends State {
 	private SensorController sensorController;
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
+	private static final int PUSH_BUFFER = 1000;	// Time to wait till a push on both touch sensors is counted
 	
 	/* private float maximumDistance = 0f;
 	private float[] sampleBuffer = {0f}; */
+	
+	private int pushBuffer;
 
 	private BoxPushState() {
 	}
@@ -92,7 +95,7 @@ public class BoxPushState extends State {
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
-		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
+		while (!pushBuffer(1000)) {
 			sensorController.tick();
 		}
 		
@@ -111,7 +114,7 @@ public class BoxPushState extends State {
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
-		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
+		while (!pushBuffer(PUSH_BUFFER)) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
@@ -124,7 +127,7 @@ public class BoxPushState extends State {
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
-		while (!(sensorController.isLeftTouching() && sensorController.isRightTouching())) {
+		while (!pushBuffer(1000)) {
 			sensorController.tick();
 		}
 		pmotors.quickStop();
@@ -167,6 +170,24 @@ public class BoxPushState extends State {
 		//At the end TODO: Keep it current!
 		Sound.beep();
 		Executor.get().requestChangeMode(Mode.Bridge);
+	}
+	
+	/**
+	 * Method to check for a long push. If a push on both touch sensors is longer then the given amount if time it is
+	 * is counted as a hard push.
+	 * 
+	 * @param ms to be waited till a push is recognized as a hard push.
+	 * @return boolean indicating if hard push or not.
+	 */
+	private boolean pushBuffer(long ms) {
+		boolean longPush = false;
+		long startTime = System.currentTimeMillis();
+		long dTime = 0;
+		do {
+			dTime = Math.abs(System.currentTimeMillis() - startTime);
+			longPush = (sensorController.isLeftTouching() && sensorController.isRightTouching());
+		} while (dTime < ms);
+		return longPush;
 	}
 	
 	
