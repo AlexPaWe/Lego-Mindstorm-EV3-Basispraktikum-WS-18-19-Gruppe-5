@@ -185,6 +185,7 @@ public class BoxPushState extends State {
 		long dTime = 0;
 		do {
 			dTime = Math.abs(System.currentTimeMillis() - startTime);
+			sensorController.tick();
 			longPush = (sensorController.isLeftTouching() && sensorController.isRightTouching());
 		} while (dTime < ms);
 		return longPush;
