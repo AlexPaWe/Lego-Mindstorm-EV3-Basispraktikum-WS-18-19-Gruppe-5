@@ -8,7 +8,6 @@ import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
-import lejos.robotics.Color;
 import robot.SensorController;
 
 public class BoxPushState extends State {
@@ -18,11 +17,6 @@ public class BoxPushState extends State {
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
 	private static final int PUSH_BUFFER = 3000;	// Time to wait till a push on both touch sensors is counted
-	
-	/* private float maximumDistance = 0f;
-	private float[] sampleBuffer = {0f}; */
-	
-	private int pushBuffer;
 	
 	private KeyListener escapeKeyListener;
 	private boolean escapeKeyPressed;
@@ -213,6 +207,10 @@ public class BoxPushState extends State {
 	}
 	
 	
+	/**
+	 * Method used to find the box while driving. It is accomplished by continuously measuring the distance with
+	 * the ultrasonic sensor and detecting the difference between an average value and the most current measurement.
+	 */
 	private void findBox() {
 		float[] sampleArray = new float[10];
 		for (int i = 0; i < sampleArray.length; i++)
@@ -234,6 +232,12 @@ public class BoxPushState extends State {
 		}
 	}
 	
+	/**
+	 * Method to compute an average of a given array.
+	 * 
+	 * @param array containing the values
+	 * @return average value of the array
+	 */
 	private float createAverage(float[] array) {
 		float sum = 0;
 		for (int i = 0; i < array.length ; i++) {
