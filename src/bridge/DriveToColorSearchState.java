@@ -26,9 +26,6 @@ public class DriveToColorSearchState extends State {
 
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
-		
 		LCD.clear();
         LCD.drawString("Drive to Color Search", 0, 0);
         SensorController.get().setColorModeToColorId();
@@ -38,8 +35,6 @@ public class DriveToColorSearchState extends State {
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -48,6 +43,14 @@ public class DriveToColorSearchState extends State {
 		{
 			Executor.get().requestChangeMode(Mode.ColorSearch);
 			return;
+		}
+		
+		if (SensorController.get().isLeftTouching() || SensorController.get().isRightTouching())
+		{
+			motors.stop();
+			pmotors.travel(-6);
+			pmotors.rotate(10);
+			motors.setMotorDirections(Direction.Forward, Direction.Forward);
 		}
 	}
 }

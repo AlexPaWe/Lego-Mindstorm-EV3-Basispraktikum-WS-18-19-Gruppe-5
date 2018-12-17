@@ -14,11 +14,14 @@ import robot.MotorController.Direction;
 public class FindGateState extends State {
 	
 	private static FindGateState instance;
-		
+	
+	/* Distance that is read, when the sensor looks inside the color search area.
+	 * 
+	 * The typical value is 0.33, but sometimes it is around 0.44.
+	 * Around 0.5 is a difficult case, where it could be both a false or a correct read.
+	 */
 	private static final float DISTANCE_MIN = 0.25f;
 	private static final float DISTANCE_MAX = 0.5f;
-	
-	private static int timesGapsSeen = 0;
 	
 	private Date lastOutput;
 	
@@ -38,57 +41,43 @@ public class FindGateState extends State {
 	    LCD.drawString("Bridge: Find Gate", 0, 0);
 	    lastOutput = new Date();
 	    MotorController.get().pivotDistanceSensorLeft();
-	    motors.stop();
-	    Delay.msDelay(2000);
-	    timesGapsSeen = 0;
+	    Delay.msDelay(1000);
 	}
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
 		
-		Date now = new Date();
-		long debugDiff = now.getTime() - lastOutput.getTime();
-		if (debugDiff >= 100) // print every 250ms
-		{
-			lastOutput = now;
-			System.out.println("g: " + timesGapsSeen + " |  d: " + distance);
-		}
+		logDebug(distance);
 		
-		
-		if (timesGapsSeen == 0)
+		if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
 		{
-			if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
-			{
-				++timesGapsSeen;
-			}
-			else
-			{
-				pmotors.rotate(-2);
-				Delay.msDelay(100);
-			}
+			System.out.println("GAP FOUND");
+			System.out.println(" d: " + distance);
+			MotorController.get().pivotDistanceSensorPark();
+			pmotors.travel(3);
+			pmotors.rotate(45);
+			Executor.get().requestChangeState(DriveToColorSearchState.get());
 		}
 		else
 		{
-			if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
-			{
-				++timesGapsSeen;
-				pmotors.rotate(-2);
-				Delay.msDelay(100);
-			}
-			else
-			{
-				MotorController.get().pivotDistanceSensorPark();
-				pmotors.travel(5);
-				pmotors.rotate(30 + (timesGapsSeen * 2));
-				Executor.get().requestChangeState(DriveToColorSearchState.get());
-			}
+			pmotors.rotate(-2);
+			Delay.msDelay(50);
+		}
+	}
+	
+	private void logDebug(float distance)
+	{
+		Date now = new Date();
+		long debugDiff = now.getTime() - lastOutput.getTime();
+		if (debugDiff >= 100) // print every 100ms
+		{
+			lastOutput = now;
+			System.out.println("d: " + distance);
 		}
 	}
 }
