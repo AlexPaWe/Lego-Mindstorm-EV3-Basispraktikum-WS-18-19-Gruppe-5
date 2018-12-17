@@ -45,6 +45,6 @@ public class ColorSearchState extends State {
 	public void mainloop() {
 		while (!redFound && !whiteFound) {
 			//TODO: Implement algorithm here!
-    }
+		}
 	}
 }
