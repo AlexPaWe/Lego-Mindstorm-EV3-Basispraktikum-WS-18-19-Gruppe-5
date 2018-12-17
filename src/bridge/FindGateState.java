@@ -6,10 +6,8 @@ import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
-import linefollow.FindWhiteState;
 import robot.MotorController;
 import robot.SensorController;
-import robot.MotorController.Direction;
 
 public class FindGateState extends State {
 	

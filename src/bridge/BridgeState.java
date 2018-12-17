@@ -60,11 +60,11 @@ public class BridgeState extends State {
 		LCD.clear();
 	    LCD.drawString("Bridge", 0, 0);
 	    lastOutput = new Date();
-	    //pmotors.travel(30); // TODO revert
+	    pmotors.travel(30);
 	    MotorController.get().pivotDistanceSensorDown();
 	    Delay.msDelay(250);
 	    motors.forward();
-	    peaceTime = false; // TODO revert
+	    peaceTime = true;
 	}
 
 	@Override
@@ -73,16 +73,6 @@ public class BridgeState extends State {
 	
 	@Override
 	public void mainloop() {
-		// TODO revert
-		if (true)
-		{
-			System.out.println("GOAL FOUND");
-			motors.stop();
-			Delay.msDelay(1000);
-			Executor.get().requestChangeState(FindGateState.get());
-			return;
-		}
-		
 		float distance = SensorController.get().getDistance();
 		
 		if (distance > 10) {distance=0;}
