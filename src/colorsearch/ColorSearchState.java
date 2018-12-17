@@ -11,17 +11,20 @@ import lejos.robotics.Color;
 import robot.MotorController;
 import robot.SensorController;
 import robot.MotorController.Direction;
-import robot.MotorController.Pivot;
 
 public class ColorSearchState extends State {
 	
 	private static final float GENERAL_MOTOR_SPEED = 180f;
-	private static final float K_P_KRIT = 2000f;
-	private static final float THRESHOLD = 0.02f;
+	private static final float K_P_KRIT = 1000f;
+	/*
+	 * 0.01f is a good value for distance controlling
+	 * 100000f basically disables controlling and just drives forward
+	 */
+	private static final float THRESHOLD = 10000f; // TODO
 	
 	private static final float TRACK_DELTA = 0.1f;
 	private static final float START_DISTANCE_FORWARD = 0.73f;
-	private static final float START_DISTANCE_BACKWARD = 0.19f;
+	private static final float START_DISTANCE_BACKWARD = 0.07f;
 	
 	private boolean searchForward;
 	private float distance_forward;
@@ -65,8 +68,8 @@ public class ColorSearchState extends State {
 	
 	@Override
 	public void mainloop() {
-		if (checkColor()) { Executor.get().requestChangeMode(Mode.ModeMenu); };
-		checkPush();
+		if (checkColor()) { Executor.get().requestChangeMode(Mode.ModeMenu); }; // if we found both colors, end
+		if (checkPush()) { return; }; // if we detected a push and turned around, we return the loop to get new sensor data
 		controlDistance();
 	}
 	
@@ -94,30 +97,22 @@ public class ColorSearchState extends State {
 		float y = translate(xd);
 		
 		String searchDirection = "";
-		float speedL;
-		float speedR;
-		
-		if (xd < THRESHOLD) {
+		if (xd < -THRESHOLD) {
 			searchDirection = "R";
-			
-			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedR = GENERAL_MOTOR_SPEED - Math.abs(y);
+		
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED + Math.abs(y), (GENERAL_MOTOR_SPEED + Math.abs(y)) / 2);
+			motors.setMotorDirections(Direction.Forward, Direction.Backward);
 		} else if (xd > THRESHOLD) {
 			searchDirection = "L";
-			
-			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedL = GENERAL_MOTOR_SPEED - Math.abs(y);
+		
+			motors.setMotorSpeeds((GENERAL_MOTOR_SPEED + Math.abs(y)) / 2, GENERAL_MOTOR_SPEED + Math.abs(y));
+			motors.setMotorDirections(Direction.Backward, Direction.Forward);
 		} else {
 			searchDirection = "N";
 			
-			speedL = GENERAL_MOTOR_SPEED;
-			speedR = GENERAL_MOTOR_SPEED;
+			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED);
+			motors.setMotorDirections(Direction.Forward, Direction.Forward);
 		}
-		
-		motors.setLeftMotorSpeed(speedL);
-		motors.setRightMotorSpeed(speedR);
-		motors.setLeftMotorDirection(Direction.Forward);
-		motors.setRightMotorDirection(Direction.Forward);
 		
 		// LOG DEBUG
 		Date now = new Date();
@@ -134,11 +129,11 @@ public class ColorSearchState extends State {
 			{
 				searchDirection2 = "B";
 			}
-			System.out.println(searchDirection2 + " | " + searchDirection + " | " + distance + " | " + xd);
+			System.out.println(searchDirection2 + " " + searchDirection + " " + String.format("%.3f", should) + " | " + String.format("%.3f", distance));
 		}
 	}
 	
-	private void checkPush()
+	private boolean checkPush()
 	{
 		if (SensorController.get().isLeftTouching() && SensorController.get().isRightTouching())
 		{
@@ -162,11 +157,16 @@ public class ColorSearchState extends State {
 			}
 			
 			searchForward = !searchForward;
+			return true;
 		}
+		
+		return false;
 	}
 	
 	/*
 	 * Returns true if BOTH colors were found.
+	 * 
+	 * Beeps when a color was found.
 	 */
 	private boolean checkColor()
 	{
@@ -176,6 +176,7 @@ public class ColorSearchState extends State {
 			System.out.println("RED FOUND");
 			if (whiteFound)
 			{
+				Sound.beep();
 				return true;
 			}
 			else
@@ -189,6 +190,7 @@ public class ColorSearchState extends State {
 			System.out.println("WHITE FOUND");
 			if (redFound)
 			{
+				Sound.beep();
 				return true;
 			}
 			else

@@ -76,6 +76,7 @@ public class Executor {
 	 */
 	public void requestChangeMode(Mode newMode)
 	{
+		SensorController.get().tick();
 		requestedMode = newMode;
 	}
 	 

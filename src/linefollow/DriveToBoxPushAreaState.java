@@ -80,7 +80,7 @@ public class DriveToBoxPushAreaState extends State {
 		
 		String searchDirection = "";
 		
-		if (xd < THRESHOLD) {
+		if (xd < -THRESHOLD) {
 			searchDirection = "R";
 			
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
