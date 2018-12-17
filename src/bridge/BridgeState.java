@@ -30,14 +30,10 @@ public class BridgeState extends State {
 	private static final float GROUND_DISTANCE_THRESHOLD = 0.14f;
 	
 	/*
-	 * Time to ignore the win condition. Used that we don't check the
+	 * Initial distance to ignore the win condition. Used that we don't check the
 	 * win condition during upwards ramp.
-	 * 
-	 * In seconds!
 	 */
-	private static final long PEACE_TIME_DURATION = 10; // TODO
 	private static final float PEACE_TIME_THRESHOLD = 0.2f;
-	private boolean peaceTime;
 	
 	/*
 	 * When the distance sensor value is higher than the GROUND_DISTANCE_THRESHOLD,
@@ -47,8 +43,7 @@ public class BridgeState extends State {
 	private static final float GOAL_HEIGHT_DISTANCE_MAX = 0.16f;
 	
 	private Date lastOutput;
-	
-	private Date stateStartDate;
+	private boolean peaceTime;
 	
 	private BridgeState() {
 	}
@@ -62,13 +57,9 @@ public class BridgeState extends State {
 	
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
-		
 		LCD.clear();
 	    LCD.drawString("Bridge", 0, 0);
 	    lastOutput = new Date();
-	    stateStartDate = new Date();
 	    pmotors.travel(30);
 	    MotorController.get().pivotDistanceSensorDown();
 	    Delay.msDelay(250);
@@ -78,15 +69,8 @@ public class BridgeState extends State {
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
-		
 	}
 	
-
-	// TODO: to make the last 90deg turn, we need some changes
-	// e.g. tilt the sensor a bit, so the robot keeps a larger distance to the cliff, but that introduces new problems
-	// e.g. to physically offset the distance sensor away from the robot
-	// e.g. when turning to the right, always drive for a second, so you increase the distance?
 	@Override
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
@@ -99,9 +83,6 @@ public class BridgeState extends State {
 		if (peaceTime)
 		{
 			distanceThreshold = GROUND_DISTANCE_THRESHOLD_PEACE_TIME;
-			//Date now = new Date();
-			//long startDiff = now.getTime() - stateStartDate.getTime();
-			//if (startDiff > PEACE_TIME_DURATION * 1000)
 			if (distance > PEACE_TIME_THRESHOLD)
 			{
 				peaceTime = false;
@@ -110,7 +91,7 @@ public class BridgeState extends State {
 		}
 		else {
 			distanceThreshold = GROUND_DISTANCE_THRESHOLD;
-			checkForGoal(distance);
+			if (checkForGoal(distance)) {return;};
 		}
 		
 		if (distance > distanceThreshold) {
@@ -126,7 +107,7 @@ public class BridgeState extends State {
 		logDebug(searchDirection, distance);
 	}
 	
-	private void checkForGoal(float distance)
+	private boolean checkForGoal(float distance)
 	{
 		if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
 		{
@@ -134,7 +115,10 @@ public class BridgeState extends State {
 			motors.stop();
 			Delay.msDelay(1000);
 			Executor.get().requestChangeState(FindGateState.get());
+			return true;
 		}
+		
+		return false;
 	}
 	
 	private void logDebug(String searchDirection, float distance)
