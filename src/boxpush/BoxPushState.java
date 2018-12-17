@@ -32,7 +32,6 @@ public class BoxPushState extends State {
 
 			@Override
 			public void keyPressed(Key k) {
-				System.out.println("Escape key pressed!");			// TODO: Remove this debug output
 				Sound.beep();
 				escapeKeyPressed = true;
 			}
@@ -55,8 +54,6 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
 		
 		escapeKeyPressed = false;
 		
@@ -71,15 +68,11 @@ public class BoxPushState extends State {
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
+		// Do nothing
 	}
 	
 	@Override
 	public void mainloop() {
-		/* TODO: Find a way to make program stoppable, a KeyListener is not working because of the absence of multitasking in
-		   the OS. (To be tested!) */
-		
-		
 		// find box: -drive slowly
 		pmotors.travel(20);
 		pmotors.setSpeed(SPEED_OF_WORK);
@@ -196,7 +189,6 @@ public class BoxPushState extends State {
 		}
 		pmotors.quickStop();
 		
-		//At the end TODO: Keep it current!
 		Sound.beep();
 		Executor.get().requestChangeMode(Mode.Bridge);
 	}
