@@ -23,8 +23,27 @@ public class BoxPushState extends State {
 	private float[] sampleBuffer = {0f}; */
 	
 	private int pushBuffer;
+	
+	private KeyListener escapeKeyListener;
+	private boolean escapeKeyPressed;
 
 	private BoxPushState() {
+		escapeKeyListener = new KeyListener() {
+
+			@Override
+			public void keyPressed(Key k) {
+				System.out.println("Escape key pressed!");			// TODO: Remove this debug output
+				Sound.beep();
+				escapeKeyPressed = true;
+			}
+
+			@Override
+			public void keyReleased(Key k) {
+				// Do nothing
+			}
+		};
+
+		Button.ESCAPE.addKeyListener(escapeKeyListener);
 	}
 
 	public static State get() {
@@ -39,6 +58,8 @@ public class BoxPushState extends State {
 		// TODO
 		// example stuff:
 		
+		escapeKeyPressed = false;
+		
 		LCD.clear();
 	    LCD.drawString("Box push", 0, 0);
 	    motors.stop();
@@ -51,51 +72,44 @@ public class BoxPushState extends State {
 	@Override
 	public void onEnd(boolean modeWillChange) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
 	public void mainloop() {
 		/* TODO: Find a way to make program stoppable, a KeyListener is not working because of the absence of multitasking in
 		   the OS. (To be tested!) */
-		Button.ESCAPE.addKeyListener(new KeyListener() {
-
-			@Override
-			public void keyPressed(Key k) {
-				Sound.beep();
-				Executor.get().requestChangeMode(Mode.ModeMenu);
-			}
-
-			@Override
-			public void keyReleased(Key k) {
-				Executor.get().requestChangeMode(Mode.ModeMenu);
-			}
-			
-		});
+		
 		
 		// find box: -drive slowly
 		pmotors.travel(20);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.turnRight(180);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.goBackward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		findBox();
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		// set distance sensor to start position to avoid collision
 		motors.pivotDistanceSensorPark();
 		
-		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
 		pmotors.travel(-1.5);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnLeft(90);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.tick();
-		while (!pushBuffer(1000)) {
+		while (!pushBuffer(PUSH_BUFFER)) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
 		
@@ -103,31 +117,40 @@ public class BoxPushState extends State {
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-4);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� left
 		pmotors.turnLeft(90);
-		//			- drive 23cm forward
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		//			- drive 28cm forward
 		pmotors.travel(28);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnRight(90);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive until both touch sensors hit the wall
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		while (!pushBuffer(PUSH_BUFFER)) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
 		pmotors.quickStop();
 		//			- pull back a bit
 		pmotors.travel(-2);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnRight(90);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive forward until box is at the wall
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.tick();
 		while (!pushBuffer(PUSH_BUFFER)) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
 		pmotors.quickStop();
@@ -137,16 +160,21 @@ public class BoxPushState extends State {
 		// pull back a bit
 		pmotors.travel(-3);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// turn 90� right
 		pmotors.turnRight(90);
-		// drive 15cm
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		// drive 22cm
 		pmotors.travel(22);
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// turn 90� left
 		pmotors.turnLeft(90);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.setColorModeToRGB();
 		
 		boolean loop = true;
@@ -158,6 +186,7 @@ public class BoxPushState extends State {
 		 * 0.086 blue
 		 */
 		while(loop) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 			float[] rgb = sensorController.getRgbValue();
 			if (rgb[2] > 0.04)
@@ -206,7 +235,7 @@ public class BoxPushState extends State {
 			sampleArray[i] = sensorController.getDistance();
 			i = (i + 1) % sampleArray.length;
 			
-			System.out.println("Av. = " + average + "; cur. = " + sampleArray[i]);	// TODO: Remove Debug Output.
+			//System.out.println("Av. = " + average + "; cur. = " + sampleArray[i]);	// TODO: Remove Debug Output.
 			
 			if (Math.abs(average - sampleArray[i]) > 0.2)
 				found = true;
