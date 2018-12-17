@@ -18,7 +18,7 @@ public class MotorController {
 	private final NXTRegulatedMotor SMALL_MOTOR = Motor.C;
 	private final float MS_FOR_1DEG_TURN = 1500 / 90;
 	private final float MS_FOR_1CM_DRIVE = 1500 / 10;
-	public final Pivot START_PIVOT = Pivot.Left;
+	public final Pivot START_PIVOT = Pivot.Park;
 	
 	// if 0, the distance sensor aims straight at the ground (in a 90 degree manor), when pivotted downwards
 	// if 45, the down state is 45 degrees to the left
@@ -26,7 +26,10 @@ public class MotorController {
 	// the distance values get pretty huge!
 	private final int DOWNPIVOT_LEFT_OFFSET = 5;
 	
-	public enum Pivot {Right,Left,Down};
+	// difference between park position and left
+	private final int PARKPIVOT_OFFSET = 55;
+	
+	public enum Pivot {Park,Left,Down};
 	private Pivot distanceSensorPivot;
 	
 	private MotorController() {
@@ -249,8 +252,8 @@ public class MotorController {
 		case Left:
 			SMALL_MOTOR.rotate(90 - DOWNPIVOT_LEFT_OFFSET);
 			break;
-		case Right:
-			SMALL_MOTOR.rotate(-90 - DOWNPIVOT_LEFT_OFFSET);
+		case Park:
+			SMALL_MOTOR.rotate(90 - DOWNPIVOT_LEFT_OFFSET + PARKPIVOT_OFFSET);
 			break;
 		case Down:
 			break;
@@ -259,21 +262,21 @@ public class MotorController {
 		distanceSensorPivot = Pivot.Down;
 	}
 	
-	public void pivotDistanceSensorRight()
+	public void pivotDistanceSensorPark()
 	{
 		switch(distanceSensorPivot)
 		{
 		case Left:
-			SMALL_MOTOR.rotate(180);
+			SMALL_MOTOR.rotate(-PARKPIVOT_OFFSET);
 			break;
-		case Right:
+		case Park:
 			break;
 		case Down:
-			SMALL_MOTOR.rotate(90 + DOWNPIVOT_LEFT_OFFSET);
+			SMALL_MOTOR.rotate(-90 + DOWNPIVOT_LEFT_OFFSET - PARKPIVOT_OFFSET);
 			break;
 		}
 
-		distanceSensorPivot = Pivot.Right;
+		distanceSensorPivot = Pivot.Park;
 	}
 	
 	public void pivotDistanceSensorLeft()
@@ -282,8 +285,8 @@ public class MotorController {
 		{
 		case Left:
 			break;
-		case Right:
-			SMALL_MOTOR.rotate(-180);
+		case Park:
+			SMALL_MOTOR.rotate(PARKPIVOT_OFFSET);
 			break;
 		case Down:
 			SMALL_MOTOR.rotate(-90 + DOWNPIVOT_LEFT_OFFSET);

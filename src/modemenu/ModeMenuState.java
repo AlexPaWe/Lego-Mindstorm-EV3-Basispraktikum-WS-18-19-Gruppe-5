@@ -8,6 +8,7 @@ import execution.State;
 import lejos.hardware.Button;
 import lejos.hardware.lcd.LCD;
 import robot.MotorController;
+import robot.SensorController;
 
 public class ModeMenuState extends State {
     private static ModeMenuState instance = null;
@@ -44,14 +45,16 @@ public class ModeMenuState extends State {
 		case Left:
 			motors.pivotDistanceSensorLeft();
 			break;
-		case Right:
-			motors.pivotDistanceSensorRight();
+		case Park:
+			motors.pivotDistanceSensorPark();
 			break;
 		case Down:
 			motors.pivotDistanceSensorDown();
 			break;
 		}
 		redraw();
+		
+		SensorController.get().setColorModeToRGB();
 	}
 
 	@Override

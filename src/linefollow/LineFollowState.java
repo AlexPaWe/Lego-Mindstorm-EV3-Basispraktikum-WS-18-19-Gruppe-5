@@ -13,7 +13,7 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower?
+	private static final int GENERAL_MOTOR_SPEED = 300; // TODO maybe slower?
 	private static final float K_P_KRIT = 1000f;
 	private static final float SHOULD_VALUE = 0.19f;
 	private static final float THRESHOLD = 30f;
@@ -43,8 +43,12 @@ public class LineFollowState extends State {
 		LCD.clear();
 	    LCD.drawString("Line: P controller", 0, 0);
 	    lastOutput = new Date();
-	    gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
 	    SensorController.get().setColorModeToRed();
+	    
+	    if (modeChanged)
+	    {
+	    	gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
+	    }
 	}
 
 	@Override
@@ -75,10 +79,11 @@ public class LineFollowState extends State {
 			
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = 0.5f * speedR;
-			//motorL.backward();
-			motors.setLeftMotorDirection(Direction.Backward);
 			speedL  = speedR;
-			//motorR.forward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
+			motors.setLeftMotorDirection(Direction.Backward);
 			motors.setRightMotorDirection(Direction.Forward);
 			
 			if (motors.LEFT_MOTOR.getTachoCount() < -400)
@@ -91,10 +96,11 @@ public class LineFollowState extends State {
 			
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedL = 0.5f * speedL;
-			//motorL.forward();
-			motors.setLeftMotorDirection(Direction.Forward);
 			speedR = speedL;
-			//motorR.backward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
+			motors.setLeftMotorDirection(Direction.Forward);
 			motors.setRightMotorDirection(Direction.Backward);
 		} else {
 			motors.LEFT_MOTOR.resetTachoCount();
@@ -102,21 +108,22 @@ public class LineFollowState extends State {
 			
 			speedL = GENERAL_MOTOR_SPEED;
 			speedR = GENERAL_MOTOR_SPEED;
-			//motorL.forward();
+			motors.setLeftMotorSpeed(speedL);
+			motors.setRightMotorSpeed(speedR);
+			
 			motors.setLeftMotorDirection(Direction.Forward);
-			//motorR.forward();
 			motors.setRightMotorDirection(Direction.Forward);
 		}
 		
-		motors.setLeftMotorSpeed(speedL);
-		motors.setRightMotorSpeed(speedR);
+		//motors.setLeftMotorSpeed(speedL);
+		//motors.setRightMotorSpeed(speedR);
 		
 		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();
 		if (diff > 250)
 		{
 			lastOutput = now;
-			System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount());
+			//System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount());
 		}
 	}
 	
@@ -125,13 +132,13 @@ public class LineFollowState extends State {
 		gapsNavigated++;
 		
 		motors.setMotorDirections(Direction.Stop, Direction.Stop);
-		pmotors.setSpeed(220);
-		pmotors.rotate(-120);
 		
 		if (gapsNavigated == 3) {
 			Executor.get().requestChangeState(DriveToBoxPushAreaState.get());
 		}
 		else {
+			pmotors.setSpeed(220);
+			pmotors.rotate(-110);
 			pmotors.travel(20);
 			SensorController.get().tick();
 			if (SensorController.get().getRedValue() > 0.19)
@@ -141,7 +148,7 @@ public class LineFollowState extends State {
 			}
 		    else
 		    {
-		    	pmotors.rotate(70);
+		    	pmotors.rotate(60);
 		    }	
 			FindWhiteState state = (FindWhiteState)FindWhiteState.get();
 			state.leftSpeed = 220;

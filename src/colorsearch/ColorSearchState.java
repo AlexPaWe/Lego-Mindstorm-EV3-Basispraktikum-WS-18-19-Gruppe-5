@@ -30,6 +30,7 @@ public class ColorSearchState extends State {
 		
 		LCD.clear();
 	    LCD.drawString("Color search", 0, 0);
+	    motors.stop();
 	    
 	    sensorController = sensorController.get();
 	}
@@ -44,6 +45,6 @@ public class ColorSearchState extends State {
 	public void mainloop() {
 		while (!redFound && !whiteFound) {
 			//TODO: Implement algorithm here!
-		}
+    }
 	}
 }
