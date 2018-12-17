@@ -39,11 +39,12 @@ public class AvoidObstacleState extends State {
 		// TODO
 		// example stuff:
 		
-		pmotors.travel(-5);
+		pmotors.setSpeed(360);
+		pmotors.travel(-10);
 		pmotors.rotate(-90);
-		pmotors.travel(15);
+		pmotors.travel(20);
 		pmotors.rotate(90);
-		pmotors.travel(35);
+		pmotors.travel(40);
 		pmotors.rotate(90);
 		
 		FindWhiteState state = (FindWhiteState)FindWhiteState.get();

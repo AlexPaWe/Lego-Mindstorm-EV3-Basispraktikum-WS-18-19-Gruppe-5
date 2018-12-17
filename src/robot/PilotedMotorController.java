@@ -14,14 +14,15 @@ public class PilotedMotorController {
 	
 	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
 	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
-	private final float WHEEL_DIAMETER = 3.28f; //ursprünglich 3f, jetzt aber abgemessen;
-	private final float TRACK_WIDTH = 19f;	// ursprünglich 12f, jetzt aber abgemessen;
+	private final float WHEEL_DIAMETER = 3.28f; //ursprï¿½nglich 3f, jetzt aber abgemessen;
+	private final float TRACK_WIDTH = 19f;	// ursprï¿½nglich 12f, jetzt aber abgemessen;
 	
 	private DifferentialPilot pilot;
 
 	private PilotedMotorController() {
 		pilot = new DifferentialPilot(WHEEL_DIAMETER, TRACK_WIDTH, LEFT_MOTOR, RIGHT_MOTOR);
-		pilot.setAcceleration(60);
+		//pilot.setAcceleration(60);
+		pilot.setRotateSpeed(60);
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class PilotedMotorController {
 	}
 
 	public void setSpeed(double speed) {
-		this.pilot.setTravelSpeed((speed / 360) * pilot.getMaxTravelSpeed());
+		this.pilot.setTravelSpeed((speed / 360) * this.pilot.getMaxTravelSpeed() );
 	}
 
 	public void goForward() {
