@@ -39,7 +39,7 @@ public class DriveToColorSearchState extends State {
 
 	@Override
 	public void mainloop() {
-		if (SensorController.get().getColorId() == Color.BLUE) 
+		if (SensorController.get().getColorId() == Color.BLUE)
 		{
 			Executor.get().requestChangeMode(Mode.ColorSearch);
 			return;
