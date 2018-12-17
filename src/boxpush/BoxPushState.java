@@ -82,50 +82,49 @@ public class BoxPushState extends State {
 		
 		// find box: -drive slowly
 		pmotors.travel(20);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.turnRight(180);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.goBackward();
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		findBox();
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		// set distance sensor to start position to avoid collision
 		motors.pivotDistanceSensorPark();
 		
-		LCD.clear(); // TODO: Just to remove test printlns
 		pmotors.quickStop();
 		pmotors.travel(-1.5);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnLeft(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive till the box is at the wall (or both touch sensors are activated)
 		pmotors.goForward();
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.tick();
-		while (!pushBuffer(1000)) {
+		while (!pushBuffer(PUSH_BUFFER)) {
 			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		pmotors.quickStop();
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-4);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� left
 		pmotors.turnLeft(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive 28cm forward
 		pmotors.travel(28);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
@@ -134,21 +133,24 @@ public class BoxPushState extends State {
 		pmotors.setSpeed(SPEED_OF_WORK);
 		sensorController.tick();
 		while (!pushBuffer(PUSH_BUFFER)) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
 		pmotors.quickStop();
 		//			- pull back a bit
 		pmotors.travel(-2);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- turn 90� right
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		//			- drive forward until box is at the wall
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.tick();
 		while (!pushBuffer(PUSH_BUFFER)) {
+			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 			sensorController.tick();
 		}
 		pmotors.quickStop();
@@ -157,21 +159,22 @@ public class BoxPushState extends State {
 		
 		// pull back a bit
 		pmotors.travel(-3);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// turn 90� right
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// drive 22cm
 		pmotors.travel(22);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// turn 90� left
 		pmotors.turnLeft(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		pmotors.goForward();
 		pmotors.setSpeed(SPEED_OF_WORK);
+		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		sensorController.setColorModeToRGB();
 		
 		boolean loop = true;
