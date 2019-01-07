@@ -45,7 +45,8 @@ public class AvoidObstacleState extends State {
 		pmotors.travel(20);
 		pmotors.rotate(90);
 		pmotors.travel(40);
-		pmotors.rotate(90);
+		
+		pmotors.rotate(60);
 		
 		FindWhiteState state = (FindWhiteState)FindWhiteState.get();
 		state.leftSpeed = 110;

@@ -15,8 +15,8 @@ public class DriveToBoxPushAreaState extends State {
 	
 	private static DriveToBoxPushAreaState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower?
-	private static final float K_P_KRIT = 2000f;
+	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower? 150 works
+	private static final float K_P_KRIT = 2000f; // 2000 works
 	private static final float SHOULD_VALUE = 0.05f; // distance to the wall in m
 	private static final float THRESHOLD = 0.01f;
 	
@@ -64,6 +64,7 @@ public class DriveToBoxPushAreaState extends State {
 		if (SensorController.get().getColorId() == Color.BLUE) 
 		{
 			System.out.println("BOX PUSH");
+			
 			Executor.get().requestChangeMode(Mode.BoxPush);
 			return;
 		}
@@ -84,12 +85,12 @@ public class DriveToBoxPushAreaState extends State {
 			searchDirection = "R";
 			
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedR = GENERAL_MOTOR_SPEED - Math.abs(y);
+			speedR = GENERAL_MOTOR_SPEED;
 		} else if (xd > THRESHOLD) {
 			searchDirection = "L";
 			
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedL = GENERAL_MOTOR_SPEED - Math.abs(y);
+			speedL = GENERAL_MOTOR_SPEED;
 		} else {
 			searchDirection = "N";
 			

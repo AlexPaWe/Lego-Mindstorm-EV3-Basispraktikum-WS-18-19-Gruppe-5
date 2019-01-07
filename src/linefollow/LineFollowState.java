@@ -47,7 +47,7 @@ public class LineFollowState extends State {
 	    
 	    if (modeChanged)
 	    {
-	    	gapsNavigated = 2; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
+	    	gapsNavigated = 0; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
 	    }
 	}
 

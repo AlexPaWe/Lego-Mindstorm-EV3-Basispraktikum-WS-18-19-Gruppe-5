@@ -3,6 +3,7 @@ package robot;
 import lejos.hardware.motor.Motor;
 import lejos.hardware.motor.NXTRegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
+import lejos.utility.Delay;
 
 /**
  * Encapsulates motor access with the DifferentialPilot class.
@@ -14,7 +15,7 @@ public class PilotedMotorController {
 	
 	private final NXTRegulatedMotor LEFT_MOTOR = Motor.B;
 	private final NXTRegulatedMotor RIGHT_MOTOR = Motor.A;
-	private final float WHEEL_DIAMETER = 3.28f; //urspr�nglich 3f, jetzt aber abgemessen;
+	private final float WHEEL_DIAMETER = 3.33f; //urspr�nglich 3f, jetzt aber abgemessen; 3.28? a bit too small?
 	private final float TRACK_WIDTH = 19f;	// urspr�nglich 12f, jetzt aber abgemessen;
 	
 	private DifferentialPilot pilot;
@@ -65,6 +66,8 @@ public class PilotedMotorController {
 	}
 
 	public void rotate(double angle) {
+		this.pilot.quickStop();
+		Delay.msDelay(10);
 		this.pilot.rotate(angle, false);
 	}
 	

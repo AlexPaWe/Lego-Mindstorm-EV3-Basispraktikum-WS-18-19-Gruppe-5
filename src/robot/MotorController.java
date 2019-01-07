@@ -168,11 +168,6 @@ public class MotorController {
 	 * @param rightTargetSpeed
 	 */
 	public void setMotorSpeeds(float leftTargetSpeed, float rightTargetSpeed) {
-
-		/* print the target speed of left and right motors on the brick's screen */
-		LCD.drawString("L= " + leftTargetSpeed, 0, 0);
-		LCD.drawString("R= " + rightTargetSpeed, 0, 1);
-		
 		//LEFT_MOTOR.startSynchronization();
 		//RIGHT_MOTOR.startSynchronization();
 

@@ -8,23 +8,25 @@ import execution.State;
 import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.Color;
+import lejos.utility.Delay;
 import robot.MotorController;
 import robot.SensorController;
+import robot.SoundController;
 import robot.MotorController.Direction;
 
 public class ColorSearchState extends State {
 	
-	private static final float GENERAL_MOTOR_SPEED = 180f;
+	private static final float GENERAL_MOTOR_SPEED = 300f; // 180?
 	private static final float K_P_KRIT = 1000f;
 	/*
 	 * 0.01f is a good value for distance controlling
 	 * 100000f basically disables controlling and just drives forward
 	 */
-	private static final float THRESHOLD = 10000f; // TODO
+	private static final float THRESHOLD = 0.01f; // TODO
 	
-	private static final float TRACK_DELTA = 0.1f;
+	private static final float TRACK_DELTA = 0.06f;
 	private static final float START_DISTANCE_FORWARD = 0.73f;
-	private static final float START_DISTANCE_BACKWARD = 0.07f;
+	private static final float START_DISTANCE_BACKWARD = 0.04f;
 	
 	private boolean searchForward;
 	private float distance_forward;
@@ -33,6 +35,11 @@ public class ColorSearchState extends State {
 	private Date lastOutput;
 	
 	private static ColorSearchState instance;
+	
+	/*
+	 * For the very first backward track, we shift the track a bit, so we have more distance to the hole we are coming from. Hacky.
+	 */
+	private boolean isFirstBackwardTrack;
 	
 	boolean redFound = false;
 	boolean whiteFound = false;
@@ -53,6 +60,7 @@ public class ColorSearchState extends State {
 	    LCD.drawString("Color search", 0, 0);
 	    lastOutput = new Date();
 	    
+	    isFirstBackwardTrack = true;
 	    searchForward = true;
 	    distance_forward = START_DISTANCE_FORWARD;
 	    distance_backward = START_DISTANCE_BACKWARD;
@@ -60,6 +68,7 @@ public class ColorSearchState extends State {
 	    SensorController.get().setColorModeToColorId();
 	    pmotors.travel(10);
 	    MotorController.get().pivotDistanceSensorLeft();
+	    SensorController.get().tick();
 	}
 
 	@Override
@@ -88,7 +97,14 @@ public class ColorSearchState extends State {
 		}
 		else 
 		{
-			should = distance_backward;
+			if (isFirstBackwardTrack)
+			{
+				should = distance_backward + 0.03f;
+			}
+			else
+			{
+				should = distance_backward;
+			}
 		}
 		
 		float xd = distance - should;
@@ -100,17 +116,20 @@ public class ColorSearchState extends State {
 		if (xd < -THRESHOLD) {
 			searchDirection = "R";
 		
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED + Math.abs(y), (GENERAL_MOTOR_SPEED + Math.abs(y)) / 2);
+			motors.setLeftMotorSpeed(GENERAL_MOTOR_SPEED + Math.abs(y));
+			motors.setRightMotorSpeed((GENERAL_MOTOR_SPEED + Math.abs(y)) / 2);
 			motors.setMotorDirections(Direction.Forward, Direction.Backward);
 		} else if (xd > THRESHOLD) {
 			searchDirection = "L";
 		
-			motors.setMotorSpeeds((GENERAL_MOTOR_SPEED + Math.abs(y)) / 2, GENERAL_MOTOR_SPEED + Math.abs(y));
+			motors.setLeftMotorSpeed((GENERAL_MOTOR_SPEED + Math.abs(y)) / 2);
+			motors.setRightMotorSpeed(GENERAL_MOTOR_SPEED + Math.abs(y));
 			motors.setMotorDirections(Direction.Backward, Direction.Forward);
 		} else {
 			searchDirection = "N";
 			
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED);
+			motors.setLeftMotorSpeed(GENERAL_MOTOR_SPEED);
+			motors.setRightMotorSpeed(GENERAL_MOTOR_SPEED);
 			motors.setMotorDirections(Direction.Forward, Direction.Forward);
 		}
 		
@@ -129,7 +148,7 @@ public class ColorSearchState extends State {
 			{
 				searchDirection2 = "B";
 			}
-			System.out.println(searchDirection2 + " " + searchDirection + " " + String.format("%.3f", should) + " | " + String.format("%.3f", distance));
+			System.out.println(searchDirection2 + " " + searchDirection + " " + String.format("%.3f", should) + " | " + String.format("%.3f", distance) + " | " + String.format("%.1f", y));
 		}
 	}
 	
@@ -150,6 +169,7 @@ public class ColorSearchState extends State {
 			else
 			{
 				distance_backward += TRACK_DELTA * 2;
+				isFirstBackwardTrack = false;
 				
 				pmotors.rotate(-90);
 				pmotors.travel(TRACK_DELTA * 100);
@@ -174,28 +194,20 @@ public class ColorSearchState extends State {
 		{
 			redFound = true;
 			System.out.println("RED FOUND");
+			SoundController.get().loudBeep();
 			if (whiteFound)
 			{
-				Sound.beep();
 				return true;
-			}
-			else
-			{
-				Sound.beep();
 			}
 		}
 		else if (!whiteFound && SensorController.get().getColorId() == Color.WHITE)
 		{
 			whiteFound = true;
 			System.out.println("WHITE FOUND");
+			SoundController.get().loudBeep();
 			if (redFound)
 			{
-				Sound.beep();
 				return true;
-			}
-			else
-			{
-				Sound.beep();
 			}
 		}
 		

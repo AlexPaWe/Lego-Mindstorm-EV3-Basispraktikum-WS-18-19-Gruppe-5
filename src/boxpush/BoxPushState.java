@@ -54,7 +54,6 @@ public class BoxPushState extends State {
 		LCD.clear();
 	    LCD.drawString("Box push", 0, 0);
 	    motors.stop();
-	    motors.pivotDistanceSensorLeft();
 	    
 	    // Set SensorController instance for this State.
 	    sensorController = SensorController.get();
@@ -67,16 +66,27 @@ public class BoxPushState extends State {
 	
 	@Override
 	public void mainloop() {
-		// find box: -drive slowly
+		motors.pivotDistanceSensorPark();
+		
+		// drive deeper into the zone, because the edge distracts rotating
 		pmotors.travel(20);
+		
+		// adjust rotation by hugging the wall
+		pmotors.rotate(90);
+		pmotors.travel(20);
+		pmotors.travel(-2);
+		
+		// rotate for backward drive
+		pmotors.rotate(90);
+		
+		// find box: -drive slowly
 		pmotors.setSpeed(SPEED_OF_WORK);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-		pmotors.turnRight(180);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		pmotors.goBackward();
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
+		motors.pivotDistanceSensorLeft();
 		findBox();
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
