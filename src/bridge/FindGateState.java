@@ -40,6 +40,10 @@ public class FindGateState extends State {
 	    lastOutput = new Date();
 	    MotorController.get().pivotDistanceSensorLeft();
 	    Delay.msDelay(1000);
+	    
+	    // decrease time by skipping first few angles
+	    // TODO: test safe values
+	    pmotors.rotate(-25);
 	}
 
 	@Override
@@ -64,7 +68,7 @@ public class FindGateState extends State {
 		else
 		{
 			pmotors.rotate(-2);
-			Delay.msDelay(50);
+			Delay.msDelay(25);
 		}
 	}
 	

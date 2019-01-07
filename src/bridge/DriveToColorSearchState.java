@@ -14,6 +14,8 @@ public class DriveToColorSearchState extends State {
 
 	private final static float SPEED = 180;
 	
+	private int touchSensorDetectionCount;
+	
 	private DriveToColorSearchState() {
 	}
 
@@ -28,6 +30,9 @@ public class DriveToColorSearchState extends State {
 	public void onBegin(boolean modeChanged) {
 		LCD.clear();
         LCD.drawString("Drive to Color Search", 0, 0);
+        
+        touchSensorDetectionCount = 0;
+        
         SensorController.get().setColorModeToColorId();
         motors.setMotorSpeeds(SPEED, SPEED);
 	    motors.setMotorDirections(Direction.Forward, Direction.Forward);
@@ -47,9 +52,22 @@ public class DriveToColorSearchState extends State {
 		
 		if (SensorController.get().isLeftTouching() || SensorController.get().isRightTouching())
 		{
+			touchSensorDetectionCount++;
+			
 			motors.stop();
 			pmotors.travel(-6);
-			pmotors.rotate(10);
+			
+			if (touchSensorDetectionCount == 1)
+			{
+				// first try a left turn
+				pmotors.rotate(10);
+			}
+			else
+			{
+				// if we hit a wall again, try a right turn
+				pmotors.rotate(-10);
+			}
+			
 			motors.setMotorDirections(Direction.Forward, Direction.Forward);
 		}
 	}
