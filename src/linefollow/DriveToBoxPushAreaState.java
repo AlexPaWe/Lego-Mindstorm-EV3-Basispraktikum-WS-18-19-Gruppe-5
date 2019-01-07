@@ -70,10 +70,7 @@ public class DriveToBoxPushAreaState extends State {
 		}
 		
 		float distance = SensorController.get().getDistance();
-		if (distance > 10) // infinity = 0
-		{
-			distance = 0;
-		}
+		
 		float xd = distance - SHOULD_VALUE;
 		
 		// translate the difference to the control value y.

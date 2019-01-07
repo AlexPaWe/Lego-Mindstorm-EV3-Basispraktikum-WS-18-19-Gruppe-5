@@ -20,6 +20,13 @@ public class SensorController {
 	private final Port LEFT_TOUCH_SENSOR_PORT = SensorPort.S3;
 	private final Port RIGHT_TOUCH_SENSOR_PORT = SensorPort.S2;
 	
+	/*
+	 * If the distance sensor detects infinity, use this value instead.
+	 * 
+	 * Fixes problems where a distance of 0 turns to infinity.
+	 */
+	private final static float INFINITY_DISTANCE_CORRECTION = 0.0f;
+	
 	private int colorId;
 	private float redValue;
 	private float[] rgbValue;
@@ -122,6 +129,11 @@ public class SensorController {
         float[] sample = new float[distanceSampler.sampleSize()];
         distanceSampler.fetchSample(sample, 0);
         distance = sample[0];
+        
+        if (Float.isInfinite(distance))
+        {
+        	distance = 0.0f;
+        }
 	}
 	
 	private void updateTouch() {

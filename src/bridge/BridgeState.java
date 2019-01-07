@@ -75,8 +75,6 @@ public class BridgeState extends State {
 	public void mainloop() {
 		float distance = SensorController.get().getDistance();
 		
-		if (distance > 10) {distance=0;}
-		
 		String searchDirection = "";
 		
 		float distanceThreshold;

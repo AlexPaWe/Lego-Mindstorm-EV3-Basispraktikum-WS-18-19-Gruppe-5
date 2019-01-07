@@ -85,10 +85,6 @@ public class ColorSearchState extends State {
 	private void controlDistance()
 	{
 		float distance = SensorController.get().getDistance();
-		if (distance > 10) // infinity = 0
-		{
-			distance = 0;
-		}
 		
 		float should;
 		if (searchForward)
