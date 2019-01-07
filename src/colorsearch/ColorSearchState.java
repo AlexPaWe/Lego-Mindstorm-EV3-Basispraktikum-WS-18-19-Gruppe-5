@@ -16,13 +16,13 @@ import robot.MotorController.Direction;
 
 public class ColorSearchState extends State {
 	
-	private static final float GENERAL_MOTOR_SPEED = 300f; // 180?
-	private static final float K_P_KRIT = 1000f;
+	private static final float GENERAL_MOTOR_SPEED = 320f; // 180 works. TODO: faster
+	private static final float K_P_KRIT = 2000f; // 1000 works. TODO: adjust to higher speed
 	/*
 	 * 0.01f is a good value for distance controlling
 	 * 100000f basically disables controlling and just drives forward
 	 */
-	private static final float THRESHOLD = 0.01f; // TODO
+	private static final float THRESHOLD = 0.01f;
 	
 	private static final float TRACK_DELTA = 0.06f;
 	private static final float START_DISTANCE_FORWARD = 0.73f;
@@ -156,14 +156,18 @@ public class ColorSearchState extends State {
 	{
 		if (SensorController.get().isLeftTouching() && SensorController.get().isRightTouching())
 		{
-			pmotors.travel(-6);
+			// set back. -6 works.
+			// TODO: maybe decrease distance? but it is already very close on the first backward track!
+			pmotors.travel(-5);
 			
 			if (searchForward)
 			{
 				distance_forward -= TRACK_DELTA * 2;
 
 				pmotors.rotate(90);
+				checkColor();
 				pmotors.travel(TRACK_DELTA * 100);
+				checkColor();
 				pmotors.rotate(90);
 			}
 			else
@@ -172,7 +176,9 @@ public class ColorSearchState extends State {
 				isFirstBackwardTrack = false;
 				
 				pmotors.rotate(-90);
+				checkColor();
 				pmotors.travel(TRACK_DELTA * 100);
+				checkColor();
 				pmotors.rotate(-90);
 			}
 			
