@@ -1,5 +1,8 @@
 package robot;
 
+import java.io.File;
+
+import lejos.hardware.Button;
 import lejos.hardware.Sound;
 
 /**
@@ -37,5 +40,24 @@ public class SoundController {
 	public void beep()
 	{
 		Sound.beep();
+	}
+	
+	/*
+	 * Blocks until you press ENTER. Then, a ThreadDeath exception is thrown...
+	 */
+	@SuppressWarnings("deprecation")
+	public void playVictoryMusic()
+	{
+		Runnable runnable = new Runnable() {
+			@Override
+			public void run() { 
+				final File soundFile = new File("imperial_march.wav");
+				Sound.playSample(soundFile, 100);
+			}
+		};
+		Thread t = new Thread(runnable);
+		t.start();
+		Button.ENTER.waitForPressAndRelease();
+		t.stop();
 	}
 }

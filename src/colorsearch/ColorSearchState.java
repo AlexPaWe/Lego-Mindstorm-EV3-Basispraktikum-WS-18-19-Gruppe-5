@@ -82,6 +82,8 @@ public class ColorSearchState extends State {
 		if (checkPush()) { return; }; // if we detected a push and turned around, we return the loop to get new sensor data
 		if (redFound && whiteFound)
 		{
+			motors.stop();
+			SoundController.get().playVictoryMusic();
 			Executor.get().requestChangeMode(Mode.ModeMenu);
 			return;
 		}
