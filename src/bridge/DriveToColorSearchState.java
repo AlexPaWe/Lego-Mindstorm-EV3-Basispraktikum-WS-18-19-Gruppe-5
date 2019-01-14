@@ -57,20 +57,16 @@ public class DriveToColorSearchState extends State {
 			motors.stop();
 			pmotors.travel(-10);
 			
-			if (touchSensorDetectionCount >= 1) // TODO
+			if (touchSensorDetectionCount == 1)
 			{
 				// first try a left turn
 				pmotors.rotate(10);
 			}
-			else if (touchSensorDetectionCount > 1) // TODO
+			else if (touchSensorDetectionCount > 1)
 			{
-				// second try a smaller left turn
+				// then try a smaller left turn
+				// a right turn should not be necessary with the current strategy
 				pmotors.rotate(5);
-			}
-			else // TODO
-			{
-				// if we hit a wall again, try a right turn
-				pmotors.rotate(-10);
 			}
 			
 			motors.setMotorDirections(Direction.Forward, Direction.Forward);
