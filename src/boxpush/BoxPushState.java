@@ -102,7 +102,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		//			- drive till the box is at the wall (or both touch sensors are activated)
-		pmotors.travel(40); // TODO
+		pmotors.travel(70); // TODO
 		
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-4);
@@ -123,7 +123,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		//			- drive until both touch sensors hit the wall
-		pmotors.travel(20);  // TODO
+		pmotors.travel(45);  // TODO
 		
 		//			- pull back a bit
 		pmotors.travel(-2);
@@ -135,7 +135,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		//			- drive forward until box is at the wall
-		pmotors.travel(30);  // TODO
+		pmotors.travel(55);  // TODO
 		
 		// After box has been pushed in the goal quadrant
 		

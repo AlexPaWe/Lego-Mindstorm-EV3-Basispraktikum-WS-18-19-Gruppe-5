@@ -8,6 +8,7 @@ import lejos.hardware.lcd.LCD;
 import lejos.utility.Delay;
 import robot.MotorController;
 import robot.SensorController;
+import robot.SoundController;
 
 public class FindGateState extends State {
 	
@@ -68,9 +69,11 @@ public class FindGateState extends State {
 			    Delay.msDelay(100);
 			    // decrease time by skipping first few angles
 			    // TODO: test safe values
-			    pmotors.rotate(-20);
+			    pmotors.rotate(-10);
 			    correctedPosition = true;
 			    System.out.println("POSITION CORRECTED");
+			    SoundController.get().beep();
+			    Delay.msDelay(1000);
 			}
 		}
 		else

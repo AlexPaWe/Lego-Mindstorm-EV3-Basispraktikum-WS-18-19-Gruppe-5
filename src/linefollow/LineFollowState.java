@@ -75,8 +75,8 @@ public class LineFollowState extends State {
 			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = 0.5f * speedR;
 			speedL  = speedR;
-			motors.setLeftMotorSpeed(speedL);
-			motors.setRightMotorSpeed(speedR);
+			//motors.setLeftMotorSpeed(speedL);
+			//motors.setRightMotorSpeed(speedR);
 			
 			motors.setLeftMotorDirection(Direction.Backward);
 			motors.setRightMotorDirection(Direction.Forward);
@@ -92,8 +92,8 @@ public class LineFollowState extends State {
 			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedL = 0.5f * speedL;
 			speedR = speedL;
-			motors.setLeftMotorSpeed(speedL);
-			motors.setRightMotorSpeed(speedR);
+			//motors.setLeftMotorSpeed(speedL);
+			//motors.setRightMotorSpeed(speedR);
 			
 			motors.setLeftMotorDirection(Direction.Forward);
 			motors.setRightMotorDirection(Direction.Backward);
@@ -103,15 +103,15 @@ public class LineFollowState extends State {
 			
 			speedL = GENERAL_MOTOR_SPEED;
 			speedR = GENERAL_MOTOR_SPEED;
-			motors.setLeftMotorSpeed(speedL);
-			motors.setRightMotorSpeed(speedR);
+			//motors.setLeftMotorSpeed(speedL);
+			//motors.setRightMotorSpeed(speedR);
 			
 			motors.setLeftMotorDirection(Direction.Forward);
 			motors.setRightMotorDirection(Direction.Forward);
 		}
 		
-		//motors.setLeftMotorSpeed(speedL);
-		//motors.setRightMotorSpeed(speedR);
+		motors.setLeftMotorSpeed(speedL);
+		motors.setRightMotorSpeed(speedR);
 		
 		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();
