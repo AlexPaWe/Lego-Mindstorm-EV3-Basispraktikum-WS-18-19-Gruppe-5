@@ -5,6 +5,7 @@ import java.util.Date;
 import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
+import lejos.hardware.motor.Motor;
 import robot.SensorController;
 import robot.MotorController.Direction;
 
@@ -12,10 +13,15 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 300; // TODO maybe slower?
+	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower? default by us: 300
 	private static final float K_P_KRIT = 1000f;
 	private static final float SHOULD_VALUE = 0.19f;
-	private static final float THRESHOLD = 30f;
+	private static final float THRESHOLD = 40f;
+	
+	private static final int BASIC_ACCELERATION = 6000;
+	private static final int ACCELERATION_MULTIPLICATOR = 50;
+	
+	private boolean firstStart = true;
 	
 	private float speedL;
 	private float speedR;
@@ -68,13 +74,28 @@ public class LineFollowState extends State {
 		@SuppressWarnings("unused")
 		String searchDirection = "";
 		
+		if (firstStart) {
+			motors.setLeftMotorSpeed(GENERAL_MOTOR_SPEED);
+			motors.setRightMotorSpeed(GENERAL_MOTOR_SPEED);
+			motors.setLeftMotorDirection(Direction.Forward);
+			motors.setRightMotorDirection(Direction.Forward);
+			firstStart = false;
+		}
+		
 		// TODO: Replace operators fittingly to direction change needed.
 		if (y < (-1 * THRESHOLD)) {
 			searchDirection = "L";
 			
-			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
+			/*
+			 * TODO: Previous implementation without acceleration:
+			 * 
+			 * speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = 0.5f * speedR;
-			speedL  = speedR;
+			speedL  = speedR;*/
+			
+			//TODO: Acceleration test
+			Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
+			Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
 			//motors.setLeftMotorSpeed(speedL);
 			//motors.setRightMotorSpeed(speedR);
 			
@@ -89,9 +110,16 @@ public class LineFollowState extends State {
 		} else if (y > THRESHOLD) {
 			searchDirection = "R";
 			
-			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedL = 0.5f * speedL;
-			speedR = speedL;
+			/*
+			 * TODO: Previous implementation without acceleration:
+			 * 
+			 * speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
+			speedL =  0.5f * speedL;
+			speedR = speedL;*/
+			
+			//TODO: Acceleration test
+			Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
+			Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
 			//motors.setLeftMotorSpeed(speedL);
 			//motors.setRightMotorSpeed(speedR);
 			
@@ -101,6 +129,7 @@ public class LineFollowState extends State {
 			motors.LEFT_MOTOR.resetTachoCount();
 			searchDirection = "N";
 			
+			 
 			speedL = GENERAL_MOTOR_SPEED;
 			speedR = GENERAL_MOTOR_SPEED;
 			//motors.setLeftMotorSpeed(speedL);
@@ -118,7 +147,7 @@ public class LineFollowState extends State {
 		if (diff > 250)
 		{
 			lastOutput = now;
-			//System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount());
+			System.out.println(searchDirection + ": " + motors.LEFT_MOTOR.getTachoCount()); //TODO: Debug-Output
 		}
 	}
 	
