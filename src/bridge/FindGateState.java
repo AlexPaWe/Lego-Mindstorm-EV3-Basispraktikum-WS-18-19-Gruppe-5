@@ -13,6 +13,8 @@ public class FindGateState extends State {
 	
 	private static FindGateState instance;
 	
+	private static final float GROUND_DISTANCE_THRESHOLD = 0.09f;
+	
 	/* Distance that is read, when the sensor looks inside the color search area.
 	 * 
 	 * The typical value is 0.33, but sometimes it is around 0.44.
@@ -22,6 +24,8 @@ public class FindGateState extends State {
 	private static final float DISTANCE_MAX = 0.5f;
 	
 	private Date lastOutput;
+	
+	private boolean correctedPosition;
 	
 	private FindGateState() {
 	}
@@ -38,12 +42,7 @@ public class FindGateState extends State {
 		LCD.clear();
 	    LCD.drawString("Bridge: Find Gate", 0, 0);
 	    lastOutput = new Date();
-	    MotorController.get().pivotDistanceSensorLeft();
-	    Delay.msDelay(1000);
-	    
-	    // decrease time by skipping first few angles
-	    // TODO: test safe values
-	    pmotors.rotate(-25);
+	    correctedPosition = false;
 	}
 
 	@Override
@@ -56,19 +55,40 @@ public class FindGateState extends State {
 		
 		logDebug(distance);
 		
-		if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
+		if (!correctedPosition)
 		{
-			System.out.println("GAP FOUND");
-			System.out.println(" d: " + distance);
-			MotorController.get().pivotDistanceSensorPark();
-			pmotors.travel(3);
-			pmotors.rotate(45);
-			Executor.get().requestChangeState(DriveToColorSearchState.get());
+			if (distance > GROUND_DISTANCE_THRESHOLD)
+			{
+				pmotors.rotate(-2);
+				Delay.msDelay(25);
+			}
+			else
+			{
+				MotorController.get().pivotDistanceSensorLeft();
+			    Delay.msDelay(100);
+			    // decrease time by skipping first few angles
+			    // TODO: test safe values
+			    pmotors.rotate(-20);
+			    correctedPosition = true;
+			    System.out.println("POSITION CORRECTED");
+			}
 		}
 		else
 		{
-			pmotors.rotate(-2);
-			Delay.msDelay(25);
+			if (distance > DISTANCE_MIN && distance < DISTANCE_MAX)
+			{
+				System.out.println("GAP FOUND");
+				System.out.println(" d: " + distance);
+				MotorController.get().pivotDistanceSensorPark();
+				pmotors.travel(3);
+				pmotors.rotate(45);
+				Executor.get().requestChangeState(DriveToColorSearchState.get());
+			}
+			else
+			{
+				pmotors.rotate(-2);
+				Delay.msDelay(25);
+			}
 		}
 	}
 	
