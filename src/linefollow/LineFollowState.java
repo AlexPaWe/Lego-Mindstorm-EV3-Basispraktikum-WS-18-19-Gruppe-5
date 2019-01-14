@@ -5,7 +5,6 @@ import java.util.Date;
 import execution.Executor;
 import execution.State;
 import lejos.hardware.lcd.LCD;
-import lejos.utility.Delay;
 import robot.SensorController;
 import robot.MotorController.Direction;
 
@@ -37,9 +36,6 @@ public class LineFollowState extends State {
 	
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
-		
 		LCD.clear();
 	    LCD.drawString("Line: P controller", 0, 0);
 	    lastOutput = new Date();
@@ -53,8 +49,6 @@ public class LineFollowState extends State {
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
@@ -71,6 +65,7 @@ public class LineFollowState extends State {
 		// translate the difference to the control value y.
 		float y = translate(xd);
 		
+		@SuppressWarnings("unused")
 		String searchDirection = "";
 		
 		// TODO: Replace operators fittingly to direction change needed.

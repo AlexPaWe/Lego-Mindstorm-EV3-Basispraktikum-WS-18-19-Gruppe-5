@@ -37,9 +37,6 @@ public class DriveToBoxPushAreaState extends State {
 
 	@Override
 	public void onBegin(boolean modeChanged) {
-		// TODO
-		// example stuff:
-		
 		LCD.clear();
         LCD.drawString("Drive to Box Push Area", 0, 0);
         SensorController.get().setColorModeToColorId();
@@ -55,8 +52,6 @@ public class DriveToBoxPushAreaState extends State {
 
 	@Override
 	public void onEnd(boolean modeWillChange) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

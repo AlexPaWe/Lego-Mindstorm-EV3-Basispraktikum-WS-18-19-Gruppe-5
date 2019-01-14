@@ -132,7 +132,7 @@ public class SensorController {
         
         if (Float.isInfinite(distance))
         {
-        	distance = 0.0f;
+        	distance = INFINITY_DISTANCE_CORRECTION;
         }
 	}
 	
