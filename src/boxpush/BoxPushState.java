@@ -16,7 +16,6 @@ public class BoxPushState extends State {
 	private SensorController sensorController;
 	
 	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
-	private static final int PUSH_BUFFER = 3000;	// Time to wait till a push on both touch sensors is counted
 	
 	private KeyListener escapeKeyListener;
 	private boolean escapeKeyPressed;
@@ -97,60 +96,46 @@ public class BoxPushState extends State {
 		pmotors.travel(-1.5);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- turn 90� right
 		pmotors.turnLeft(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-		//			- drive till the box is at the wall (or both touch sensors are activated)
-		pmotors.goForward();
-		pmotors.setSpeed(SPEED_OF_WORK);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-		sensorController.tick();
-		while (!pushBuffer(PUSH_BUFFER)) {
-			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-			sensorController.tick();
-		}
 		
-		pmotors.quickStop();
+		//			- drive till the box is at the wall (or both touch sensors are activated)
+		pmotors.travel(40); // TODO
+		
 		//			- pull back a little (e.g. 3cm)
 		pmotors.travel(-4);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- turn 90� left
 		pmotors.turnLeft(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- drive 28cm forward
 		pmotors.travel(28);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- turn 90� right
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- drive until both touch sensors hit the wall
-		pmotors.goForward();
-		pmotors.setSpeed(SPEED_OF_WORK);
-		sensorController.tick();
-		while (!pushBuffer(PUSH_BUFFER)) {
-			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-			sensorController.tick();
-		}
-		pmotors.quickStop();
+		pmotors.travel(20);  // TODO
+		
 		//			- pull back a bit
 		pmotors.travel(-2);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- turn 90� right
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
+		
 		//			- drive forward until box is at the wall
-		pmotors.goForward();
-		pmotors.setSpeed(SPEED_OF_WORK);
-		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-		sensorController.tick();
-		while (!pushBuffer(PUSH_BUFFER)) {
-			if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
-			sensorController.tick();
-		}
-		pmotors.quickStop();
+		pmotors.travel(30);  // TODO
 		
 		// After box has been pushed in the goal quadrant
 		
@@ -196,26 +181,6 @@ public class BoxPushState extends State {
 		Sound.beep();
 		Executor.get().requestChangeMode(Mode.Bridge);
 	}
-	
-	/**
-	 * Method to check for a long push. If a push on both touch sensors is longer then the given amount if time it is
-	 * is counted as a hard push.
-	 * 
-	 * @param ms to be waited till a push is recognized as a hard push.
-	 * @return boolean indicating if hard push or not.
-	 */
-	private boolean pushBuffer(long ms) {
-		boolean longPush = false;
-		long startTime = System.currentTimeMillis();
-		long dTime = 0;
-		do {
-			dTime = Math.abs(System.currentTimeMillis() - startTime);
-			sensorController.tick();
-			longPush = (sensorController.isLeftTouching() && sensorController.isRightTouching());
-		} while (dTime < ms);
-		return longPush;
-	}
-	
 	
 	/**
 	 * Method used to find the box while driving. It is accomplished by continuously measuring the distance with
