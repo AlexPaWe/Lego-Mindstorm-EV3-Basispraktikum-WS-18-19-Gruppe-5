@@ -5,10 +5,8 @@ import java.util.Date;
 import execution.Executor;
 import execution.Mode;
 import execution.State;
-import lejos.hardware.Sound;
 import lejos.hardware.lcd.LCD;
 import lejos.robotics.Color;
-import lejos.utility.Delay;
 import robot.MotorController;
 import robot.SensorController;
 import robot.SoundController;
@@ -41,8 +39,8 @@ public class ColorSearchState extends State {
 	 */
 	private boolean isFirstBackwardTrack;
 	
-	boolean redFound = false;
-	boolean whiteFound = false;
+	boolean redFound;
+	boolean whiteFound;
 
 	private ColorSearchState() {
 	}
@@ -65,6 +63,9 @@ public class ColorSearchState extends State {
 	    distance_forward = START_DISTANCE_FORWARD;
 	    distance_backward = START_DISTANCE_BACKWARD;
 	    
+	    redFound = false;
+	    whiteFound = false;
+	    
 	    SensorController.get().setColorModeToColorId();
 	    pmotors.travel(10);
 	    MotorController.get().pivotDistanceSensorLeft();
@@ -77,8 +78,13 @@ public class ColorSearchState extends State {
 	
 	@Override
 	public void mainloop() {
-		if (checkColor()) { Executor.get().requestChangeMode(Mode.ModeMenu); }; // if we found both colors, end
+		checkColor();
 		if (checkPush()) { return; }; // if we detected a push and turned around, we return the loop to get new sensor data
+		if (redFound && whiteFound)
+		{
+			Executor.get().requestChangeMode(Mode.ModeMenu);
+			return;
+		}
 		controlDistance();
 	}
 	
@@ -186,7 +192,7 @@ public class ColorSearchState extends State {
 	}
 	
 	/*
-	 * Returns true if BOTH colors were found.
+	 * Returns true if BOTH colors were found, but the result can also be read in the members redFound and whiteFound.
 	 * 
 	 * Beeps when a color was found.
 	 */
