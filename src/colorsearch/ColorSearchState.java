@@ -6,7 +6,6 @@ import execution.Executor;
 import execution.Mode;
 import execution.State;
 import lejos.hardware.lcd.LCD;
-import lejos.robotics.Color;
 import robot.MotorController;
 import robot.SensorController;
 import robot.SoundController;
@@ -66,7 +65,7 @@ public class ColorSearchState extends State {
 	    redFound = false;
 	    whiteFound = false;
 	    
-	    SensorController.get().setColorModeToColorId();
+	    SensorController.get().setColorModeToRGB();
 	    pmotors.travel(10);
 	    MotorController.get().pivotDistanceSensorLeft();
 	    SensorController.get().tick();
@@ -200,22 +199,24 @@ public class ColorSearchState extends State {
 	 */
 	private boolean checkColor()
 	{
-		if (!redFound && SensorController.get().getColorId() == Color.RED)
-		{
-			redFound = true;
-			System.out.println("RED FOUND");
-			SoundController.get().loudBeep();
-			if (whiteFound)
-			{
-				return true;
-			}
-		}
-		else if (!whiteFound && SensorController.get().getColorId() == Color.WHITE)
+		float[] color = SensorController.get().getRgbValue();
+	
+		if (!whiteFound && color[0] > 0.1 && color[1] > 0.1 && color[2] > 0.1)
 		{
 			whiteFound = true;
 			System.out.println("WHITE FOUND");
 			SoundController.get().loudBeep();
 			if (redFound)
+			{
+				return true;
+			}
+		}
+		else if (!redFound && color[0] > 0.1)
+		{
+			redFound = true;
+			System.out.println("RED FOUND");
+			SoundController.get().loudBeep();
+			if (whiteFound)
 			{
 				return true;
 			}
