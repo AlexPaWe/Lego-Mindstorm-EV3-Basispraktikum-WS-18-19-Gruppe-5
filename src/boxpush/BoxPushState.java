@@ -135,7 +135,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		//			- drive forward until box is at the wall
-		pmotors.travel(55);  // TODO
+		pmotors.travel(70);  // TODO
 		
 		// After box has been pushed in the goal quadrant
 		
