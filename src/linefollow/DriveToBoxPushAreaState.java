@@ -14,9 +14,9 @@ public class DriveToBoxPushAreaState extends State {
 	
 	private static DriveToBoxPushAreaState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower? 150 works
-	private static final float K_P_KRIT = 500f; // 2000 works
-	private static final float SHOULD_VALUE = 0.05f; // distance to the wall in m
+	private static final int GENERAL_MOTOR_SPEED = 220;
+	private static final float K_P_KRIT = 1000f;
+	private static final float SHOULD_VALUE = 0.06f; // distance to the wall in m
 	private Date lastOutput;
 
 	private DriveToBoxPushAreaState() {
@@ -38,7 +38,6 @@ public class DriveToBoxPushAreaState extends State {
         lastOutput = new Date();
         pmotors.setSpeed(GENERAL_MOTOR_SPEED);
 		pmotors.rotate(-90);
-		pmotors.travel(10);
 	}
 
 	@Override
