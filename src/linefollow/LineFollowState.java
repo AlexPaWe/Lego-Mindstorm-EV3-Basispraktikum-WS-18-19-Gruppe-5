@@ -13,7 +13,7 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower? default by us: 300
+	private static final int GENERAL_MOTOR_SPEED = 300; // TODO maybe slower? default by us: 300
 	private static final float K_P_KRIT = 1000f;
 	private static final float SHOULD_VALUE = 0.19f;
 	private static final float THRESHOLD = 40f;
@@ -86,16 +86,14 @@ public class LineFollowState extends State {
 		if (y < (-1 * THRESHOLD)) {
 			searchDirection = "L";
 			
-			/*
-			 * TODO: Previous implementation without acceleration:
-			 * 
-			 * speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
+			// TODO: Previous implementation without acceleration:
+			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedR = 0.5f * speedR;
-			speedL  = speedR;*/
+			speedL  = speedR;
 			
 			//TODO: Acceleration test
-			Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
-			Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
+			//Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y) * ACCELERATION_MULTIPLICATOR)));
+			//Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (0.5 * Math.abs(y) * ACCELERATION_MULTIPLICATOR)));
 			//motors.setLeftMotorSpeed(speedL);
 			//motors.setRightMotorSpeed(speedR);
 			
@@ -110,16 +108,14 @@ public class LineFollowState extends State {
 		} else if (y > THRESHOLD) {
 			searchDirection = "R";
 			
-			/*
-			 * TODO: Previous implementation without acceleration:
-			 * 
-			 * speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
+			// TODO: Previous implementation without acceleration:
+			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
 			speedL =  0.5f * speedL;
-			speedR = speedL;*/
+			speedR = speedL;
 			
 			//TODO: Acceleration test
-			Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
-			Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
+			//Motor.A.setAcceleration((int)(BASIC_ACCELERATION - (0.5 * Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
+			//Motor.B.setAcceleration((int)(BASIC_ACCELERATION - (Math.abs(y)) * ACCELERATION_MULTIPLICATOR));
 			//motors.setLeftMotorSpeed(speedL);
 			//motors.setRightMotorSpeed(speedR);
 			
@@ -188,6 +184,7 @@ public class LineFollowState extends State {
 	 * @return translated control value y
 	 */
 	private float translate(float xd) {
-		return xd * 0.5f * K_P_KRIT;
+		//return xd * 0.5f * K_P_KRIT;
+		return xd * K_P_KRIT;
 	}
 }
