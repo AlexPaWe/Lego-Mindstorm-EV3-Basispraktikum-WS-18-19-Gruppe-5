@@ -68,7 +68,7 @@ public class BoxPushState extends State {
 		motors.pivotDistanceSensorPark();
 		
 		// drive deeper into the zone, because the edge distracts rotating
-		pmotors.travel(20);
+		pmotors.travel(30);
 		
 		// adjust rotation by hugging the wall
 		pmotors.rotate(90);
@@ -86,6 +86,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		motors.pivotDistanceSensorLeft();
+		SensorController.get().tick();
 		findBox();
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
@@ -135,7 +136,7 @@ public class BoxPushState extends State {
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		
 		//			- drive forward until box is at the wall
-		pmotors.travel(55);  // TODO
+		pmotors.travel(70);  // TODO
 		
 		// After box has been pushed in the goal quadrant
 		
