@@ -44,7 +44,7 @@ public class AvoidObstacleState extends State {
 		pmotors.rotate(-90);
 		pmotors.travel(20);
 		pmotors.rotate(90);
-		pmotors.travel(40);
+		pmotors.travel(50);
 		
 		pmotors.rotate(60);
 		

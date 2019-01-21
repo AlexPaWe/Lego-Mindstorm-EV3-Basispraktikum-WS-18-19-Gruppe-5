@@ -9,20 +9,14 @@ import lejos.hardware.lcd.LCD;
 import lejos.robotics.Color;
 import robot.MotorController;
 import robot.SensorController;
-import robot.MotorController.Direction;
 
 public class DriveToBoxPushAreaState extends State {
 	
 	private static DriveToBoxPushAreaState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 150; // TODO maybe slower? 150 works
-	private static final float K_P_KRIT = 2000f; // 2000 works
+	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower? 150 works
+	private static final float K_P_KRIT = 500f; // 2000 works
 	private static final float SHOULD_VALUE = 0.05f; // distance to the wall in m
-	private static final float THRESHOLD = 0.01f;
-	
-	private float speedL;
-	private float speedR;
-	
 	private Date lastOutput;
 
 	private DriveToBoxPushAreaState() {
@@ -43,11 +37,8 @@ public class DriveToBoxPushAreaState extends State {
         MotorController.get().pivotDistanceSensorLeft();
         lastOutput = new Date();
         pmotors.setSpeed(GENERAL_MOTOR_SPEED);
-		pmotors.rotate(-80);
-		pmotors.travel(15);
-		pmotors.rotate(-20);
-        motors.setLeftMotorDirection(Direction.Forward);
-		motors.setRightMotorDirection(Direction.Forward);
+		pmotors.rotate(-90);
+		pmotors.travel(10);
 	}
 
 	@Override
@@ -68,50 +59,27 @@ public class DriveToBoxPushAreaState extends State {
 		
 		float xd = distance - SHOULD_VALUE;
 		
-		// translate the difference to the control value y.
-		float y = translate(xd);
-		
-		String searchDirection = "";
-		
-		if (xd < -THRESHOLD) {
-			searchDirection = "R";
-			
-			speedL = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedR = GENERAL_MOTOR_SPEED;
-		} else if (xd > THRESHOLD) {
-			searchDirection = "L";
-			
-			speedR = GENERAL_MOTOR_SPEED + Math.abs(y);
-			speedL = GENERAL_MOTOR_SPEED;
-		} else {
-			searchDirection = "N";
-			
-			speedL = GENERAL_MOTOR_SPEED;
-			speedR = GENERAL_MOTOR_SPEED;
-		}
-		
-		motors.setLeftMotorSpeed(speedL);
-		motors.setRightMotorSpeed(speedR);
-		motors.setLeftMotorDirection(Direction.Forward);
-		motors.setRightMotorDirection(Direction.Forward);
+		/* calculate turn, based on the sample value */
+		float turn = K_P_KRIT * xd; /* only a P-controller will be used. */
+
+		/*
+		 * adjust the power of left and right motors in order to make the robot follow
+		 * the line
+		 */
+		float leftTargetSpeed = GENERAL_MOTOR_SPEED - turn;
+		float rightTargetSpeed = GENERAL_MOTOR_SPEED + turn;
+
+		/* adjust the robot's movement in order to make the robot follow the line */
+		motors.setMotorSpeeds(leftTargetSpeed, rightTargetSpeed);
 		
 		Date now = new Date();
 		long diff = now.getTime() - lastOutput.getTime();
 		if (diff > 250)
 		{
 			lastOutput = now;
-			System.out.println(searchDirection + " | " + distance + " | " + xd + " | " + y);
+			System.out.println(leftTargetSpeed + " | " + rightTargetSpeed);
+			//System.out.println(searchDirection + " | " + distance + " | " + xd + " | " + y);
 			//System.out.println(speedR + " " + speedL);
 		}
-	}
-
-	/**
-	 * Method that implements the translation from the difference into the control value.
-	 * Description: See exercise sheet 29.
-	 * @param xd: Difference between measured light value and should be value
-	 * @return translated control value y
-	 */
-	private float translate(float xd) {
-		return xd * 0.5f * K_P_KRIT;
 	}
 }
