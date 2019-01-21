@@ -147,7 +147,7 @@ public class BoxPushState extends State {
 		pmotors.turnRight(90);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// drive 22cm
-		pmotors.travel(22);
+		pmotors.travel(25);
 		pmotors.setSpeed(SPEED_OF_WORK);
 		if (escapeKeyPressed) { Executor.get().requestChangeMode(Mode.ModeMenu); return;}
 		// turn 90� left
