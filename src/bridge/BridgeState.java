@@ -30,9 +30,22 @@ public class BridgeState extends State {
 	/*
 	 * Initial distance to ignore the win condition. Used that we don't check the
 	 * win condition during upwards ramp.
+	 * The cliff is 0.273f
 	 */
-	private static final float PEACE_TIME_THRESHOLD = 0.2f;
+	private static final float PEACE_TIME_THRESHOLD = 0.25f;
 	
+	private static final float DOWN_HEIGHT_DISTANCE_MIN = 0.20f;
+	private static final float DOWN_HEIGHT_DISTANCE_MAX = 0.24f;
+	private static final int DOWNWARDS_MOTOR_SPEED = 200;
+	private boolean isDrivingDownwards;
+	
+	private int currentSpeed;
+	
+	/*
+	 * To avoid mismeasurement ending the peace time,
+	 * the target height has to be reached multiple times in a row.
+	 */
+	private int countPeaceThresholdSeen;
 	/*
 	 * When the distance sensor value is higher than the GROUND_DISTANCE_THRESHOLD,
 	 * but lower than this, it detects the goal.
@@ -63,6 +76,9 @@ public class BridgeState extends State {
 	    Delay.msDelay(250);
 	    motors.forward();
 	    peaceTime = true;
+	    isDrivingDownwards = false;
+	    countPeaceThresholdSeen = 0;
+	    currentSpeed = GENERAL_MOTOR_SPEED;
 	}
 
 	@Override
@@ -81,23 +97,45 @@ public class BridgeState extends State {
 			distanceThreshold = GROUND_DISTANCE_THRESHOLD_PEACE_TIME;
 			if (distance > PEACE_TIME_THRESHOLD)
 			{
-				peaceTime = false;
-				System.out.println("PEACE TIME OVER");
+				countPeaceThresholdSeen++;
+				
+				if (countPeaceThresholdSeen > 1)
+				{
+					peaceTime = false;
+					System.out.println("PEACE TIME OVER: " + distance);
+				}
+			}
+			else
+			{
+				countPeaceThresholdSeen = 0;
 			}
 		}
 		else {
 			distanceThreshold = GROUND_DISTANCE_THRESHOLD;
-			if (checkForGoal(distance)) {return;};
+			
+			if (!isDrivingDownwards)
+			{
+				if (distance > DOWN_HEIGHT_DISTANCE_MIN && distance < DOWN_HEIGHT_DISTANCE_MAX)
+				{
+					System.out.println("DOWNWARD FOUND: " + distance);
+					isDrivingDownwards = true;
+					currentSpeed = DOWNWARDS_MOTOR_SPEED;
+				}
+			}
+			else
+			{
+				if (checkForGoal(distance)) {return;};
+			}
 		}
 		
 		if (distance > distanceThreshold) {
 			searchDirection = "R";
 			
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED, GENERAL_MOTOR_SPEED * 0.25f);
+			motors.setMotorSpeeds(currentSpeed, currentSpeed * 0.25f);
 		} else {
 			searchDirection = "L";
 			
-			motors.setMotorSpeeds(GENERAL_MOTOR_SPEED * 0.25f, GENERAL_MOTOR_SPEED);
+			motors.setMotorSpeeds(currentSpeed * 0.25f, currentSpeed);
 		}
 		
 		logDebug(searchDirection, distance);
@@ -107,8 +145,7 @@ public class BridgeState extends State {
 	{
 		if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
 		{
-			System.out.println("-d: " + distance);
-			System.out.println("GOAL FOUND");
+			System.out.println("GOAL FOUND: " + distance);
 			motors.stop();
 			Delay.msDelay(1000);
 			Executor.get().requestChangeState(FindGateState.get());
