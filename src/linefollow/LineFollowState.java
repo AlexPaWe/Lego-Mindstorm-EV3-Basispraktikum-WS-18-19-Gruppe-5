@@ -158,8 +158,8 @@ public class LineFollowState extends State {
 		    	pmotors.rotate(60);
 		    }	
 			FindWhiteState state = (FindWhiteState)FindWhiteState.get();
-			state.leftSpeed = 220;
-			state.rightSpeed = 220;
+			state.leftSpeed = 130;
+			state.rightSpeed = 130;
 			Executor.get().requestChangeState(FindWhiteState.get());
 		}
 	}

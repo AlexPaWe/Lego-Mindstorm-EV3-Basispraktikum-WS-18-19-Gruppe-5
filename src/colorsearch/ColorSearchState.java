@@ -217,7 +217,7 @@ public class ColorSearchState extends State {
 				return true;
 			}
 		}
-		else if (!redFound && color[0] > 0.1 && color[1] < 0.05 && color[2] < 0.05)
+		else if (!redFound && color[0] > 0.05 && color[1] < 0.05 && color[2] < 0.05)
 		{
 			redFound = true;
 			//System.out.println("RED FOUND");
