@@ -19,7 +19,7 @@ public class LineFollowState extends State {
 	
 	private Date lastOutput;
 	
-	private int gapsNavigated;
+	private boolean gapsNavigated;
 
 	private LineFollowState() {
 	}
@@ -41,7 +41,7 @@ public class LineFollowState extends State {
 	    
 	    if (modeChanged)
 	    {
-	    	gapsNavigated = 0; // TODO normally 0, but if we want to test DriveToBoxPushAreaState then 2
+	    	gapsNavigated = false;
 	    }
 	}
 
@@ -53,6 +53,7 @@ public class LineFollowState extends State {
 	public void mainloop() {
 		if (SensorController.get().isRightTouching() && SensorController.get().isLeftTouching()) 
 		{
+			gapsNavigated = true;
 			Executor.get().requestChangeState(AvoidObstacleState.get());
 			return;
 		}
@@ -110,12 +111,10 @@ public class LineFollowState extends State {
 	}
 	
 	private void navigateOverGap()
-	{
-		gapsNavigated++;
-		
+	{	
 		motors.setMotorDirections(Direction.Stop, Direction.Stop);
 		
-		if (gapsNavigated == 3) {
+		if (gapsNavigated) {
 			Executor.get().requestChangeState(DriveToBoxPushAreaState.get());
 		}
 		else {
