@@ -15,7 +15,7 @@ public class BoxPushState extends State {
 	private static BoxPushState instance;
 	private SensorController sensorController;
 	
-	private static final int SPEED_OF_WORK = 150;	//TODO: check speed! Maybe faster?!
+	private static final int SPEED_OF_WORK = 200;	//TODO: check speed! Maybe faster?!
 	
 	private KeyListener escapeKeyListener;
 	private boolean escapeKeyPressed;
