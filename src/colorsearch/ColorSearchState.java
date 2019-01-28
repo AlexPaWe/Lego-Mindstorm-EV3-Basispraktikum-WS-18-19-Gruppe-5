@@ -166,6 +166,10 @@ public class ColorSearchState extends State {
 			if (searchForward)
 			{
 				distance_forward -= TRACK_DELTA * 2;
+				if (distance_forward < 0.03f)
+				{
+					distance_forward = 0.03f;
+				}
 
 				pmotors.rotate(90);
 				checkColor();
@@ -201,20 +205,24 @@ public class ColorSearchState extends State {
 	{
 		float[] color = SensorController.get().getRgbValue();
 	
-		if (!whiteFound && color[0] > 0.1 && color[1] > 0.1 && color[2] > 0.1)
+		if (!whiteFound && color[0] > 0.05 && color[1] > 0.05 && color[2] > 0.05)
 		{
 			whiteFound = true;
 			//System.out.println("WHITE FOUND");
+			LCD.clear();
+		    LCD.drawString("ColorSearch: White found", 0, 0);
 			SoundController.get().loudBeep();
 			if (redFound)
 			{
 				return true;
 			}
 		}
-		else if (!redFound && color[0] > 0.1)
+		else if (!redFound && color[0] > 0.1 && color[1] < 0.05 && color[2] < 0.05)
 		{
 			redFound = true;
 			//System.out.println("RED FOUND");
+			LCD.clear();
+		    LCD.drawString("ColorSearch: Red found", 0, 0);
 			SoundController.get().loudBeep();
 			if (whiteFound)
 			{

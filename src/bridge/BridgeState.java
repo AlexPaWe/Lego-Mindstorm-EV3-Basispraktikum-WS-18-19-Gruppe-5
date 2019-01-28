@@ -69,7 +69,7 @@ public class BridgeState extends State {
 	@Override
 	public void onBegin(boolean modeChanged) {
 		LCD.clear();
-	    LCD.drawString("Bridge", 0, 0);
+	    LCD.drawString("Bridge: Up", 0, 0);
 	    lastOutput = new Date();
 	    pmotors.travel(30);
 	    MotorController.get().pivotDistanceSensorDown();
@@ -102,6 +102,8 @@ public class BridgeState extends State {
 				if (countPeaceThresholdSeen > 1)
 				{
 					peaceTime = false;
+					LCD.clear();
+				    LCD.drawString("Bridge: Top", 0, 0);
 					//System.out.println("PEACE TIME OVER: " + distance);
 				}
 			}
@@ -117,6 +119,8 @@ public class BridgeState extends State {
 			{
 				if (distance > DOWN_HEIGHT_DISTANCE_MIN && distance < DOWN_HEIGHT_DISTANCE_MAX)
 				{
+					LCD.clear();
+				    LCD.drawString("Bridge: Down", 0, 0);
 					//System.out.println("DOWNWARD FOUND: " + distance);
 					isDrivingDownwards = true;
 					currentSpeed = DOWNWARDS_MOTOR_SPEED;
@@ -145,6 +149,8 @@ public class BridgeState extends State {
 	{
 		if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
 		{
+			LCD.clear();
+		    LCD.drawString("Bridge: Goal", 0, 0);
 			//System.out.println("GOAL FOUND: " + distance);
 			motors.stop();
 			Delay.msDelay(1000);

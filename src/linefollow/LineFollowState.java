@@ -12,12 +12,14 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 180; // 220 worked most of the time
-	private static final float K_P_KRIT = 2500f; // 3000 worked most of the time
+	private static final int GENERAL_MOTOR_SPEED = 200; // 220 worked most of the time // 180 safer
+	private static final float K_P_KRIT = 2750f; // 3000 worked most of the time // 2500 safer
 	private static final float SHOULD_VALUE = 0.19f;
 	private static final float THRESHOLD = 0.1f;
 	
 	private Date lastOutput;
+	
+	private Date rightTouched;
 	
 	private boolean gapsNavigated;
 
@@ -38,6 +40,7 @@ public class LineFollowState extends State {
 	    lastOutput = new Date();
 	    SensorController.get().setColorModeToRed();
 	    motors.LEFT_MOTOR.resetTachoCount();
+	    rightTouched = null;
 	    
 	    if (modeChanged)
 	    {
@@ -51,11 +54,35 @@ public class LineFollowState extends State {
 	
 	@Override
 	public void mainloop() {
-		if (SensorController.get().isRightTouching() && SensorController.get().isLeftTouching()) 
+		if (rightTouched == null)
 		{
-			gapsNavigated = true;
-			Executor.get().requestChangeState(AvoidObstacleState.get());
-			return;
+			if (SensorController.get().isRightTouching())
+			{
+				rightTouched = new Date();
+			}
+			else
+			{
+			}
+		}
+		else
+		{
+			if (SensorController.get().isRightTouching())
+			{
+				Date now = new Date();
+				
+				long diff = now.getTime() - rightTouched.getTime();
+				System.out.print("diff: " + diff);
+				if (diff > 2000)
+				{
+					gapsNavigated = true;
+					Executor.get().requestChangeState(AvoidObstacleState.get());
+					return;
+				}
+			}
+			else
+			{
+				rightTouched = null;
+			}
 		}
 		
 		// compute the difference between measured light value and should be value.

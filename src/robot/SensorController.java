@@ -1,5 +1,6 @@
 package robot;
 
+import lejos.hardware.Sound;
 import lejos.hardware.port.Port;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
@@ -17,8 +18,8 @@ public class SensorController {
 	
 	private final Port COLOR_SENSOR_PORT = SensorPort.S1;
 	private final Port DISTANCE_SENSOR_PORT = SensorPort.S4;
-	private final Port LEFT_TOUCH_SENSOR_PORT = SensorPort.S3;
-	private final Port RIGHT_TOUCH_SENSOR_PORT = SensorPort.S2;
+	private final Port LEFT_TOUCH_SENSOR_PORT = SensorPort.S2;
+	private final Port RIGHT_TOUCH_SENSOR_PORT = SensorPort.S3;
 	
 	/*
 	 * If the distance sensor detects infinity, use this value instead.

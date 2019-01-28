@@ -14,8 +14,8 @@ public class DriveToBoxPushAreaState extends State {
 	
 	private static DriveToBoxPushAreaState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220;
-	private static final float K_P_KRIT = 1000f;
+	private static final int GENERAL_MOTOR_SPEED = 260;
+	private static final float K_P_KRIT = 1500f;
 	private static final float SHOULD_VALUE = 0.06f; // distance to the wall in m
 	private Date lastOutput;
 
