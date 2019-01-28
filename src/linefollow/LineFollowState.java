@@ -71,7 +71,6 @@ public class LineFollowState extends State {
 				Date now = new Date();
 				
 				long diff = now.getTime() - rightTouched.getTime();
-				System.out.print("diff: " + diff);
 				if (diff > 2000)
 				{
 					gapsNavigated = true;
