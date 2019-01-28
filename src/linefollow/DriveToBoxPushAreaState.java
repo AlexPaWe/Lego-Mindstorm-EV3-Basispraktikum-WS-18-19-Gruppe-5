@@ -48,7 +48,7 @@ public class DriveToBoxPushAreaState extends State {
 	public void mainloop() {
 		if (SensorController.get().getColorId() == Color.BLUE) 
 		{
-			System.out.println("BOX PUSH");
+			//System.out.println("BOX PUSH");
 			
 			Executor.get().requestChangeMode(Mode.BoxPush);
 			return;
@@ -76,7 +76,7 @@ public class DriveToBoxPushAreaState extends State {
 		if (diff > 250)
 		{
 			lastOutput = now;
-			System.out.println(leftTargetSpeed + " | " + rightTargetSpeed);
+			//System.out.println(leftTargetSpeed + " | " + rightTargetSpeed);
 			//System.out.println(searchDirection + " | " + distance + " | " + xd + " | " + y);
 			//System.out.println(speedR + " " + speedL);
 		}

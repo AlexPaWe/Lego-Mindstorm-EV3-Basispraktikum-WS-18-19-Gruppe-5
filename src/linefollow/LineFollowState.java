@@ -12,8 +12,8 @@ public class LineFollowState extends State {
 	
 	private static LineFollowState instance;
 	
-	private static final int GENERAL_MOTOR_SPEED = 220; // TODO maybe slower?
-	private static final float K_P_KRIT = 3000f;
+	private static final int GENERAL_MOTOR_SPEED = 180; // 220 worked most of the time
+	private static final float K_P_KRIT = 2500f; // 3000 worked most of the time
 	private static final float SHOULD_VALUE = 0.19f;
 	private static final float THRESHOLD = 0.1f;
 	
@@ -105,7 +105,7 @@ public class LineFollowState extends State {
 		if (diff > 250)
 		{
 			lastOutput = now;
-			System.out.println(searchDirection + " | " + motors.LEFT_MOTOR.getTachoCount());
+			//System.out.println(searchDirection + " | " + motors.LEFT_MOTOR.getTachoCount());
 		}
 	}
 	
