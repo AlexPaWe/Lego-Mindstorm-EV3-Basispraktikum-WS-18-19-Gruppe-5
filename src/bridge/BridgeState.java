@@ -102,7 +102,7 @@ public class BridgeState extends State {
 				if (countPeaceThresholdSeen > 1)
 				{
 					peaceTime = false;
-					System.out.println("PEACE TIME OVER: " + distance);
+					//System.out.println("PEACE TIME OVER: " + distance);
 				}
 			}
 			else
@@ -117,7 +117,7 @@ public class BridgeState extends State {
 			{
 				if (distance > DOWN_HEIGHT_DISTANCE_MIN && distance < DOWN_HEIGHT_DISTANCE_MAX)
 				{
-					System.out.println("DOWNWARD FOUND: " + distance);
+					//System.out.println("DOWNWARD FOUND: " + distance);
 					isDrivingDownwards = true;
 					currentSpeed = DOWNWARDS_MOTOR_SPEED;
 				}
@@ -145,7 +145,7 @@ public class BridgeState extends State {
 	{
 		if (distance > GOAL_HEIGHT_DISTANCE_MIN && distance < GOAL_HEIGHT_DISTANCE_MAX)
 		{
-			System.out.println("GOAL FOUND: " + distance);
+			//System.out.println("GOAL FOUND: " + distance);
 			motors.stop();
 			Delay.msDelay(1000);
 			Executor.get().requestChangeState(FindGateState.get());
@@ -163,7 +163,7 @@ public class BridgeState extends State {
 		if (debugDiff > 250) // print every 250ms
 		{
 			lastOutput = now;
-			System.out.println(searchDirection + " | " + distance);
+			//System.out.println(searchDirection + " | " + distance);
 		}
 	}
 }

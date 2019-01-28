@@ -151,7 +151,7 @@ public class ColorSearchState extends State {
 			{
 				searchDirection2 = "B";
 			}
-			System.out.println(searchDirection2 + " " + searchDirection + " " + String.format("%.3f", should) + " | " + String.format("%.3f", distance) + " | " + String.format("%.1f", y));
+			//System.out.println(searchDirection2 + " " + searchDirection + " " + String.format("%.3f", should) + " | " + String.format("%.3f", distance) + " | " + String.format("%.1f", y));
 		}
 	}
 	
@@ -204,7 +204,7 @@ public class ColorSearchState extends State {
 		if (!whiteFound && color[0] > 0.1 && color[1] > 0.1 && color[2] > 0.1)
 		{
 			whiteFound = true;
-			System.out.println("WHITE FOUND");
+			//System.out.println("WHITE FOUND");
 			SoundController.get().loudBeep();
 			if (redFound)
 			{
@@ -214,7 +214,7 @@ public class ColorSearchState extends State {
 		else if (!redFound && color[0] > 0.1)
 		{
 			redFound = true;
-			System.out.println("RED FOUND");
+			//System.out.println("RED FOUND");
 			SoundController.get().loudBeep();
 			if (whiteFound)
 			{

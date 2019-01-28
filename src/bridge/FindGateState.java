@@ -55,9 +55,9 @@ public class FindGateState extends State {
 		}
 		else
 		{
-			System.out.println("-d: " + distance);
+			//System.out.println("-d: " + distance);
 		    Delay.msDelay(100);
-		    System.out.println("POSITION CORRECTED");
+		    //System.out.println("POSITION CORRECTED");
 		    SoundController.get().beep();
 		    
 		    MotorController.get().pivotDistanceSensorPark();
@@ -76,7 +76,7 @@ public class FindGateState extends State {
 		if (debugDiff >= 100) // print every 100ms
 		{
 			lastOutput = now;
-			System.out.println("d: " + distance);
+			//System.out.println("d: " + distance);
 		}
 	}
 }
