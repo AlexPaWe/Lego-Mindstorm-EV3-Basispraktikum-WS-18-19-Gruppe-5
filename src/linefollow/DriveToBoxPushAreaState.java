@@ -38,6 +38,7 @@ public class DriveToBoxPushAreaState extends State {
         lastOutput = new Date();
         pmotors.setSpeed(GENERAL_MOTOR_SPEED);
 		pmotors.rotate(-90);
+		pmotors.travel(15);
 	}
 
 	@Override
